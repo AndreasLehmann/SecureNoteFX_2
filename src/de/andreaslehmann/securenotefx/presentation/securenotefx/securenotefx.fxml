@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="684.0" prefWidth="891.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="de.andreaslehmann.securenotefx.presentation.securenotefx.SecureNoteFXPresenter">
+  <children>
+    <VBox prefHeight="483.0" prefWidth="631.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+        <ToolBar fx:id="toolBar">
+          <items>
+            <Button mnemonicParsing="false" text="New" />
+            <Button mnemonicParsing="false" text="Delete" />
+          </items>
+        </ToolBar>
+        <SplitPane id="splitter" dividerPositions="0.29358830146231724, 0.8458942632170978" focusTraversable="true" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="SOMETIMES">
+          <items>
+            <VBox fx:id="leftPane" prefHeight="-1.0" prefWidth="100.0" />
+            <AnchorPane fx:id="middlePane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+            <AnchorPane fx:id="rightPane" prefHeight="200.0" prefWidth="200.0" />
+          </items>
+        </SplitPane>
+      </children>
+    </VBox>
+  </children>
+  <stylesheets>
+    <URL value="@../../app.css" />
+    <URL value="@securenotefx.css" />
+  </stylesheets>
+</AnchorPane>
