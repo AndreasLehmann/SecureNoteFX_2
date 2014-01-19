@@ -14,8 +14,8 @@
       <children>
         <ToolBar fx:id="toolBar">
           <items>
-            <Button mnemonicParsing="false" text="New" />
-            <Button mnemonicParsing="false" text="Delete" />
+            <Button mnemonicParsing="false" onAction="#btnNewClicked" text="Neu" />
+            <Button mnemonicParsing="false" onAction="#btnDeleteClicked" text="Löschen" />
           </items>
         </ToolBar>
         <SplitPane id="splitter" dividerPositions="0.29358830146231724, 0.8458942632170978" focusTraversable="true" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="SOMETIMES">
