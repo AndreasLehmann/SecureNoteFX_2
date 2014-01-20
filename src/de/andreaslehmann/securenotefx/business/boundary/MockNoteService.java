@@ -25,6 +25,13 @@ public class MockNoteService implements NoteService {
         
         noteList.add( new NoteEntity("Title1","Body 1"));
         noteList.add( new NoteEntity("Title2","<h1>HTML</h1>Message."));
+        NoteEntity e3 = new NoteEntity("Title3","Body 1");
+        e3.setDirty();
+        noteList.add( e3);
+        NoteEntity e4 = new NoteEntity("Title4","Body 1");
+        e4.setDirty();
+        noteList.add( e4);
+        noteList.add( new NoteEntity("Title5","Body 1"));
         
     }
 
