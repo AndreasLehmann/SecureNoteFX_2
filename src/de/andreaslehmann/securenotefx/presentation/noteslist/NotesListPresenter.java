@@ -10,7 +10,6 @@ import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -84,17 +83,21 @@ public class NotesListPresenter implements Initializable {
                 
             }
         };
-
-        this.notesListView.getSelectionModel().selectedItemProperty().addListener(selectionListener);
+   this.notesListView.getSelectionModel().selectedItemProperty().addListener(selectionListener);
     }
 
     /**
      * ListView konfigurieren und Modell setzen
      */
     private void setupListView() {
-
+        
         this.notesListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         this.notesListView.itemsProperty().set(this.notes);
+        // setze CellFactory um den Titel der Notizen anzuzeigen
+        this.notesListView.setCellFactory(new NoteTitleCellFactory());
+
+        
+        
     }
 
     public ObservableList<NoteEntity> getNotesProperty() {
