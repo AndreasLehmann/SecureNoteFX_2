@@ -14,7 +14,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToolBar;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.web.HTMLEditor;
 import org.slf4j.Logger;
@@ -43,6 +45,9 @@ public class NoteEditorPresenter implements Initializable {
 
         this.selectedNotePropery = new SimpleObjectProperty<>();
 
+        // eigene Click-Handler registrieren
+        customizeHTMLEditor();
+
         // Dieser Listener wird aktiv, wenn jemand  von außen das selectedNote setzt
         ChangeListener<NoteEntity> selectionListener = new ChangeListener<NoteEntity>() {
             @Override
@@ -60,11 +65,36 @@ public class NoteEditorPresenter implements Initializable {
 
     @FXML
     private void titleTextField_keyReleased(KeyEvent event) {
-        this.selectedNotePropery.get().setTitle(titleTextField.getText());
+        if (this.selectedNotePropery != null && this.selectedNotePropery.get() != null) {
+            this.selectedNotePropery.get().setTitle(titleTextField.getText());
+        }
     }
 
     @FXML
     private void bodyEditor_keyReleased(KeyEvent event) {
-        this.selectedNotePropery.get().setBody(bodyEditor.getHtmlText());
+        if (this.selectedNotePropery != null && this.selectedNotePropery.get() != null) {
+            this.selectedNotePropery.get().setBody(bodyEditor.getHtmlText());
+        }
+    }
+
+    void bodyEditor_ToolbarClicked() {
+        if (this.selectedNotePropery != null && this.selectedNotePropery.get() != null) {
+            this.selectedNotePropery.get().setBody(bodyEditor.getHtmlText());
+        }
+    }
+
+    private void customizeHTMLEditor() {
+        // eigenen Handler für clicks auf die HTML-Editor Toolbar setzen.
+        // TODO: refactor!
+        Node node = this.bodyEditor.lookup(".top-toolbar");
+        if (node != null && node instanceof ToolBar) {
+            ToolBar bar = (ToolBar) node;
+            HTMLEditorToolbarWrapper.wrapButtons(bar, this);
+        }
+        node = this.bodyEditor.lookup(".bottom-toolbar");
+        if (node != null && node instanceof ToolBar) {
+            ToolBar bar = (ToolBar) node;
+            HTMLEditorToolbarWrapper.wrapButtons(bar, this);
+        }
     }
 }
