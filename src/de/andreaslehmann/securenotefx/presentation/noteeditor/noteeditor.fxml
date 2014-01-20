@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import java.net.*?>
 <?import java.util.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -10,9 +11,12 @@
 
 <VBox prefHeight="296.0" prefWidth="504.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="de.andreaslehmann.securenotefx.presentation.noteeditor.NoteEditorPresenter">
   <children>
-    <TextField fx:id="titleTextField" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="-1.0" VBox.vgrow="NEVER">
+    <TextField fx:id="titleTextField" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="-1.0" promptText="Notiztitel" style="" text="" VBox.vgrow="NEVER">
+      <stylesheets>
+        <URL value="@noteeditor.css" />
+      </stylesheets>
       <VBox.margin>
-        <Insets bottom="10.0" top="10.0" />
+        <Insets bottom="10.0" top="5.0" />
       </VBox.margin>
     </TextField>
     <HTMLEditor fx:id="bodyEditor" htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;" prefHeight="200.0" prefWidth="506.0" VBox.vgrow="SOMETIMES" />
