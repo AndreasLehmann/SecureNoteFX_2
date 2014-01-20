@@ -15,6 +15,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.web.HTMLEditor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,4 +58,13 @@ public class NoteEditorPresenter implements Initializable {
         return this.selectedNotePropery;
     }
 
+    @FXML
+    private void titleTextField_keyReleased(KeyEvent event) {
+        this.selectedNotePropery.get().setTitle(titleTextField.getText());
+    }
+
+    @FXML
+    private void bodyEditor_keyReleased(KeyEvent event) {
+        this.selectedNotePropery.get().setBody(bodyEditor.getHtmlText());
+    }
 }
