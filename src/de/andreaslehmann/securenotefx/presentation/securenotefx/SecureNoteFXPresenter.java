@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
@@ -40,6 +41,10 @@ public class SecureNoteFXPresenter implements Initializable {
 
     NotesListPresenter notesListPresenter;
     NoteEditorPresenter noteEditorPresenter;
+    @FXML
+    private Button btnNew;
+    @FXML
+    private Button btnDelete;
 
     @FXML
     private void btnDeleteClicked(ActionEvent event) {
@@ -70,6 +75,10 @@ public class SecureNoteFXPresenter implements Initializable {
         VBox.setVgrow(noteEditorView.getView(), Priority.ALWAYS);
         this.middlePane.getChildren().add(noteEditorView.getView());
 
+        
+        // "Löschen" Button wird nur enabled, wenn eine Notiz selektiert ist.
+        this.btnDelete.disableProperty().bind( this.notesListPresenter.selectedNoteProperty().isNull());
+        
     }
 
 }
