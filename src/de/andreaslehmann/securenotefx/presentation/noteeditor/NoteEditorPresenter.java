@@ -44,6 +44,7 @@ public class NoteEditorPresenter implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         this.selectedNotePropery = new SimpleObjectProperty<>();
+        this.bodyEditor.disableProperty().set(true);
 
         // eigene Click-Handler registrieren
         customizeHTMLEditor();
@@ -54,6 +55,7 @@ public class NoteEditorPresenter implements Initializable {
             public void changed(ObservableValue<? extends NoteEntity> observable, NoteEntity oldNote, NoteEntity newNote) {
                 titleTextField.setText(newNote.getTitle());
                 bodyEditor.setHtmlText(newNote.getBody());
+                bodyEditor.disableProperty().set(false);
             }
         };
         this.selectedNotePropery.addListener(selectionListener);
