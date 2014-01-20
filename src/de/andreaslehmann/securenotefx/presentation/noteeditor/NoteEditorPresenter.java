@@ -5,8 +5,13 @@
  */
 package de.andreaslehmann.securenotefx.presentation.noteeditor;
 
+import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -21,6 +26,12 @@ import org.slf4j.LoggerFactory;
 public class NoteEditorPresenter implements Initializable {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
+
+    /**
+     * Referenz der aktuell selektierten Notiz
+     */
+    private ObjectProperty<NoteEntity> selectedNotePropery;
+
     @FXML
     private TextField titleTextField;
     @FXML
@@ -29,6 +40,20 @@ public class NoteEditorPresenter implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        this.selectedNotePropery = new SimpleObjectProperty<>();
+
+        // Dieser Listener wird aktiv, wenn jemand  von außen das selectedNote setzt
+        ChangeListener<NoteEntity> selectionListener = new ChangeListener<NoteEntity>() {
+            @Override
+            public void changed(ObservableValue<? extends NoteEntity> observable, NoteEntity oldValue, NoteEntity newValue) {
+                titleTextField.setText(newValue.getTitle());
+            }
+        };
+        this.selectedNotePropery.addListener(selectionListener);
+    }
+
+    public ObjectProperty<NoteEntity> selectedNotePropery() {
+        return this.selectedNotePropery;
     }
 
 }
