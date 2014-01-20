@@ -5,6 +5,8 @@
  */
 package de.andreaslehmann.securenotefx.presentation.securenotefx;
 
+import de.andreaslehmann.securenotefx.presentation.noteeditor.NoteEditorPresenter;
+import de.andreaslehmann.securenotefx.presentation.noteeditor.NoteEditorView;
 import de.andreaslehmann.securenotefx.presentation.noteslist.NotesListPresenter;
 import de.andreaslehmann.securenotefx.presentation.noteslist.NotesListView;
 import java.net.URL;
@@ -30,13 +32,14 @@ public class SecureNoteFXPresenter implements Initializable {
     @FXML
     private VBox leftPane;
     @FXML
-    private AnchorPane middlePane;
+    private VBox middlePane;
     @FXML
     private AnchorPane rightPane;
     @FXML
     private ToolBar toolBar;
 
     NotesListPresenter notesListPresenter;
+    NoteEditorPresenter noteEditorPresenter;
 
     @FXML
     private void btnDeleteClicked(ActionEvent event) {
@@ -50,12 +53,21 @@ public class SecureNoteFXPresenter implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        // Erzeuge Notizenliste
         NotesListView notesListView = new NotesListView();
         this.notesListPresenter = (NotesListPresenter) notesListView.getPresenter();
-
         // Ausdehung der Notizliste setzen und in VBox einhängen
         VBox.setVgrow(notesListView.getView(), Priority.ALWAYS);
         this.leftPane.getChildren().add(notesListView.getView());
+        
+        // Erzeuge Notiz-Editor
+        NoteEditorView noteEditorView = new NoteEditorView();
+        this.noteEditorPresenter = (NoteEditorPresenter) noteEditorView.getPresenter();
+        // Ausdehung setzen und in VBox einhängen
+        VBox.setVgrow(noteEditorView.getView(), Priority.ALWAYS);
+        this.middlePane.getChildren().add(noteEditorView.getView());
+        
         
     }
 
