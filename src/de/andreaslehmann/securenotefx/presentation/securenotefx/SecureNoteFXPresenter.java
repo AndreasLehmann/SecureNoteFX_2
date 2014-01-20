@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 public class SecureNoteFXPresenter implements Initializable {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    
+
     @FXML
     private VBox leftPane;
     @FXML
@@ -48,28 +48,28 @@ public class SecureNoteFXPresenter implements Initializable {
 
     @FXML
     private void btnNewClicked(ActionEvent event) {
-         log.debug("btnNewClicked");
+        log.debug("btnNewClicked");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         // Erzeuge Notizenliste
         NotesListView notesListView = new NotesListView();
         this.notesListPresenter = (NotesListPresenter) notesListView.getPresenter();
         // Ausdehung der Notizliste setzen und in VBox einhängen
         VBox.setVgrow(notesListView.getView(), Priority.ALWAYS);
         this.leftPane.getChildren().add(notesListView.getView());
-        
+
         // Erzeuge Notiz-Editor
         NoteEditorView noteEditorView = new NoteEditorView();
         this.noteEditorPresenter = (NoteEditorPresenter) noteEditorView.getPresenter();
+        // Hänge Listerner an die NoteList
+        this.noteEditorPresenter.selectedNotePropery().bind(this.notesListPresenter.selectedNoteProperty());
         // Ausdehung setzen und in VBox einhängen
         VBox.setVgrow(noteEditorView.getView(), Priority.ALWAYS);
         this.middlePane.getChildren().add(noteEditorView.getView());
-        
-        
-    }
 
+    }
 
 }
