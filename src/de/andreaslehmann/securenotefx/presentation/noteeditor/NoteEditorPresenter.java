@@ -45,8 +45,9 @@ public class NoteEditorPresenter implements Initializable {
         // Dieser Listener wird aktiv, wenn jemand  von außen das selectedNote setzt
         ChangeListener<NoteEntity> selectionListener = new ChangeListener<NoteEntity>() {
             @Override
-            public void changed(ObservableValue<? extends NoteEntity> observable, NoteEntity oldValue, NoteEntity newValue) {
-                titleTextField.setText(newValue.getTitle());
+            public void changed(ObservableValue<? extends NoteEntity> observable, NoteEntity oldNote, NoteEntity newNote) {
+                titleTextField.setText(newNote.getTitle());
+                bodyEditor.setHtmlText(newNote.getBody());
             }
         };
         this.selectedNotePropery.addListener(selectionListener);
