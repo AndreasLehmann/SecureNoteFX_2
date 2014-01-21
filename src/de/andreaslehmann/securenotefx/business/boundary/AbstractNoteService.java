@@ -34,7 +34,7 @@ public abstract class AbstractNoteService {
      * @return Liste der Änderungen oder null, wenn eine der Eingabelisten null
      * ist.
      */
-    protected List<ChangeSet> synchronize(List<NoteEntity> remoteList, List<NoteEntity> localList) {
+    protected List<ChangeSet> compare(List<NoteEntity> remoteList, List<NoteEntity> localList) {
 
         if (remoteList == null || localList == null) {
             return null;

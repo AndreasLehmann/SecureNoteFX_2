@@ -241,8 +241,10 @@ public class FilebasedNoteService extends AbstractNoteService implements NoteSer
     /**
      * Gibt alle Änderungen zwischen den beiden Listes als ChangeSet zuürck.
      *
-     * MöglichremoteNote ÄndremoteNoterungremoteNoten: ADD, DELETE, UPDATE
+     * Möglich Ändrerungen: ADD, DELETE, UPDATE, usw.
      * (siehe CHANGE_TYPE)
+     * 
+     * @return      Liste der Änderungen
      */
     public List<ChangeSet> getChanges() {
         // Erzeuge die Liste der Remote-Elemente
@@ -253,7 +255,7 @@ public class FilebasedNoteService extends AbstractNoteService implements NoteSer
             // speichere die geladenen Elemente für später;
             remoteList.add(remoteNote);
         }
-        return synchronize(remoteList, this.noteList.getValue());
+        return compare(remoteList, this.noteList.getValue());
     }
 
 }

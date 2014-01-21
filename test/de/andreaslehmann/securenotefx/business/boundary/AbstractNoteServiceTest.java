@@ -39,7 +39,7 @@ public class AbstractNoteServiceTest {
 
         List<ChangeSet> changes;
         // null input
-        changes = abstractProxyClass.synchronize(null, null);
+        changes = abstractProxyClass.compare(null, null);
         assertNull(changes);
     }
 
@@ -60,7 +60,7 @@ public class AbstractNoteServiceTest {
         localList.add(e1_2);
         localList.add(e1_3);
 
-        changes = abstractProxyClass.synchronize(remoteList, localList);
+        changes = abstractProxyClass.compare(remoteList, localList);
         //System.out.println(changes);
         assertEquals("Änderungsliste ist nicht leer.", 0, changes.size());
     }
@@ -82,7 +82,7 @@ public class AbstractNoteServiceTest {
         localList.add(e1_2);
         //localList.add(e1_3); kein passendes lokales Element
 
-        changes = abstractProxyClass.synchronize(remoteList, localList);
+        changes = abstractProxyClass.compare(remoteList, localList);
         //System.out.println(changes);
         assertEquals(1, changes.size());
         assertEquals(ChangeSet.ChangeTyp.REMOTE_ADDED, changes.get(0).changeType);
@@ -106,7 +106,7 @@ public class AbstractNoteServiceTest {
         localList.add(e1_2);
         localList.add(e1_3);
 
-        changes = abstractProxyClass.synchronize(remoteList, localList);
+        changes = abstractProxyClass.compare(remoteList, localList);
         //System.out.println(changes);
         assertEquals(1, changes.size());
         assertEquals(ChangeSet.ChangeTyp.LOCAL_ADDED, changes.get(0).changeType);
@@ -141,7 +141,7 @@ public class AbstractNoteServiceTest {
         localList.add(e1_2_local);
         localList.add(e1_3);
 
-        changes = abstractProxyClass.synchronize(remoteList, localList);
+        changes = abstractProxyClass.compare(remoteList, localList);
         //System.out.println(changes);
         assertEquals(1, changes.size());
         assertEquals(ChangeSet.ChangeTyp.LOCAL_UPDATED, changes.get(0).changeType);
@@ -177,7 +177,7 @@ public class AbstractNoteServiceTest {
         localList.add(e1_2_local);
         localList.add(e1_3);
 
-        changes = abstractProxyClass.synchronize(remoteList, localList);
+        changes = abstractProxyClass.compare(remoteList, localList);
         //System.out.println(changes);
         assertEquals(1, changes.size());
         assertEquals(ChangeSet.ChangeTyp.LOCAL_DELETED, changes.get(0).changeType);
@@ -212,7 +212,7 @@ public class AbstractNoteServiceTest {
         localList.add(e1_2_local);
         localList.add(e1_3);
 
-        changes = abstractProxyClass.synchronize(remoteList, localList);
+        changes = abstractProxyClass.compare(remoteList, localList);
         //System.out.println(changes);
         assertEquals(1, changes.size());
         assertEquals(ChangeSet.ChangeTyp.LOCAL_DELETED, changes.get(0).changeType);
@@ -248,7 +248,7 @@ public class AbstractNoteServiceTest {
         localList.add(e1_2_local);
         localList.add(e1_3);
 
-        changes = abstractProxyClass.synchronize(remoteList, localList);
+        changes = abstractProxyClass.compare(remoteList, localList);
         //System.out.println(changes);
         assertEquals(1, changes.size());
         assertEquals(ChangeSet.ChangeTyp.BOTH_UPDATED, changes.get(0).changeType);
@@ -285,7 +285,7 @@ public class AbstractNoteServiceTest {
         localList.add(e1_2_local);
         localList.add(e1_3);
 
-        changes = abstractProxyClass.synchronize(remoteList, localList);
+        changes = abstractProxyClass.compare(remoteList, localList);
         //System.out.println(changes);
         assertEquals(1, changes.size());
         assertEquals(ChangeSet.ChangeTyp.BOTH_UPDATED, changes.get(0).changeType);
@@ -320,7 +320,7 @@ public class AbstractNoteServiceTest {
         localList.add(e1_2_local);
         localList.add(e1_3);
 
-        changes = abstractProxyClass.synchronize(remoteList, localList);
+        changes = abstractProxyClass.compare(remoteList, localList);
         //System.out.println(changes);
         assertEquals(1, changes.size());
         assertEquals(ChangeSet.ChangeTyp.REMOTE_DELETED, changes.get(0).changeType);
@@ -357,7 +357,7 @@ public class AbstractNoteServiceTest {
         localList.add(e1_2_local);
         localList.add(e1_3);
 
-        changes = abstractProxyClass.synchronize(remoteList, localList);
+        changes = abstractProxyClass.compare(remoteList, localList);
         //System.out.println(changes);
         assertEquals(1, changes.size());
         assertEquals(ChangeSet.ChangeTyp.BOTH_UPDATED, changes.get(0).changeType);
@@ -390,7 +390,7 @@ public class AbstractNoteServiceTest {
         localList.add(e1_2_local);
         localList.add(e1_3);
 
-        changes = abstractProxyClass.synchronize(remoteList, localList);
+        changes = abstractProxyClass.compare(remoteList, localList);
         //System.out.println(changes);
         assertEquals(1, changes.size());
         assertEquals(ChangeSet.ChangeTyp.LOCAL_UPDATED, changes.get(0).changeType);
@@ -422,7 +422,7 @@ public class AbstractNoteServiceTest {
         localList.add(e1_2_local);
         localList.add(e1_3);
 
-        changes = abstractProxyClass.synchronize(remoteList, localList);
+        changes = abstractProxyClass.compare(remoteList, localList);
         //System.out.println(changes);
         assertEquals(1, changes.size());
         assertEquals(ChangeSet.ChangeTyp.REMOTE_UPDATED, changes.get(0).changeType);
@@ -456,7 +456,7 @@ public class AbstractNoteServiceTest {
         localList.add(e1_2_local);
         localList.add(e1_3);
 
-        changes = abstractProxyClass.synchronize(remoteList, localList);
+        changes = abstractProxyClass.compare(remoteList, localList);
         //System.out.println(changes);
         assertEquals(1, changes.size());
         assertEquals(ChangeSet.ChangeTyp.BOTH_UPDATED, changes.get(0).changeType);
@@ -487,7 +487,7 @@ public class AbstractNoteServiceTest {
         localList.add(e1_2_local);
         //localList.add(e1_3); noch nicht gelesen
 
-        changes = abstractProxyClass.synchronize(remoteList, localList);
+        changes = abstractProxyClass.compare(remoteList, localList);
         //System.out.println(changes);
         assertEquals(3, changes.size());
         assertEquals(ChangeSet.ChangeTyp.REMOTE_UPDATED, changes.get(0).changeType);
