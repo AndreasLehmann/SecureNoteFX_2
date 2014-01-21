@@ -5,6 +5,7 @@
  */
 package de.andreaslehmann.securenotefx.business.entity;
 
+import java.beans.Transient;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
@@ -25,9 +26,9 @@ public class NoteEntity implements Serializable {
     private long createdOn = 0L;
     private long lastSavedOn = 0L;
     private long deletedOn = 0L;
-    private SimpleBooleanProperty dirty;
-
-    private final DirtyListener dirtyListener = new DirtyListener();
+    private transient SimpleBooleanProperty dirty;
+    
+    private final transient DirtyListener dirtyListener = new DirtyListener();
 
     public NoteEntity() {
         this.title = new SimpleStringProperty();
