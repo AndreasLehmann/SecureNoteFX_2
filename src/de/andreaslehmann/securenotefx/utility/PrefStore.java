@@ -17,11 +17,21 @@ public class PrefStore {
     private static final String ROOTPATH = "de.andreaslehmann.securenotefx";
     private static final Preferences p = Preferences.userRoot().node(ROOTPATH);
     
-    public static String getValue(String key, String def) {
-        return p.get(key, def);
-    }
-
-    public static void setValue(String key, String value) {
-        p.put(key, value);
+    //############################################################
+    // Alle Preference Schlüssel sind hier defniniert.
+    
+    /**
+     * Ort, an dem die Notizen lokal abgelegt werden.
+     */
+    public static String LOCAL_BASE_PATH = "LocalBasePath";
+    public static String WIN_WIDTH = "WinWidth";
+    public static String WIN_HEIGHT = "WinHeight";
+    public static String WIN_X = "WinX";
+    public static String WIN_Y = "WinY";
+    
+    //############################################################
+    
+    public static Preferences instance() {
+        return p;
     }
 }
