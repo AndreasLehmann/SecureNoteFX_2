@@ -23,7 +23,7 @@ public class MainApp extends Application {
             log.debug("BasePath:" + PrefStore.instance().get(PrefStore.LOCAL_BASE_PATH, null));
 
             // Für Startup-Zwecke
-            //PrefStore.instance().put(PrefStore.LOCAL_BASE_PATH, "f:\\tmp\\MySecretNoteStorage_A\\");
+            PrefStore.instance().put(PrefStore.LOCAL_BASE_PATH, "f:/tmp/MySecretNoteStorage_A/");
         }
 
         SecureNoteFXView appView = new SecureNoteFXView();
