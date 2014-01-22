@@ -170,7 +170,7 @@ public class FilebasedNoteService extends AbstractNoteService implements NoteSer
         return true;
     }
 
-    @Override
+    //@Override
     public int synchronize() {
         final List<ChangeSet> changes = getChanges();
         applyChanges(changes, this.noteList);
