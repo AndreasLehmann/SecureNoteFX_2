@@ -5,7 +5,7 @@
  */
 package de.andreaslehmann.securenotefx.presentation.noteslist;
 
-import de.andreaslehmann.securenotefx.business.boundary.MockNoteService;
+import de.andreaslehmann.securenotefx.business.boundary.LocalFSNoteService;
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
 import java.net.URL;
 import java.util.List;
@@ -35,7 +35,7 @@ public class NotesListPresenter implements Initializable {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Inject
-    private MockNoteService service;
+    private LocalFSNoteService service;
 
     /**
      * Hält eine Referenza fu die aktuell selektierte Notiz
