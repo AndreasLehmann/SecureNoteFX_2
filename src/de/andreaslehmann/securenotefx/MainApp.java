@@ -2,22 +2,55 @@ package de.andreaslehmann.securenotefx;
 
 import com.airhacks.afterburner.injection.InjectionProvider;
 import de.andreaslehmann.securenotefx.presentation.securenotefx.SecureNoteFXView;
+import de.andreaslehmann.securenotefx.utility.PrefStore;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MainApp extends Application {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(final Stage stage) throws Exception {
+
+        if (log.isDebugEnabled()) {
+            log.debug("BasePath:" + PrefStore.instance().get(PrefStore.LOCAL_BASE_PATH, null));
+
+            // Für Startup-Zwecke
+            //PrefStore.instance().put(PrefStore.LOCAL_BASE_PATH, "f:\\tmp\\MySecretNoteStorage_A\\");
+        }
 
         SecureNoteFXView appView = new SecureNoteFXView();
         Scene scene = new Scene(appView.getView());
         stage.setTitle("SecureNote");
         final String uri = getClass().getResource("app.css").toExternalForm();
+        log.debug(uri);
         scene.getStylesheets().add(uri);
         stage.setScene(scene);
+
+        // Fensterposition, -höhe und -breite wiederherstellen
+        stage.setWidth(PrefStore.instance().getDouble(PrefStore.WIN_WIDTH, 1024.0));
+        stage.setHeight(PrefStore.instance().getDouble(PrefStore.WIN_HEIGHT, 600.0));
+        stage.setX(PrefStore.instance().getDouble(PrefStore.WIN_X, 250.0));
+        stage.setY(PrefStore.instance().getDouble(PrefStore.WIN_Y, 250.0));
+
+        // Fensterposition, -höhe und -breite sichern, wenn sie verändert wird.
+        stage.setOnCloseRequest(
+                new EventHandler<WindowEvent>() {
+                    public void handle(final WindowEvent event) {
+                        PrefStore.instance().putDouble(PrefStore.WIN_X, stage.getX());
+                        PrefStore.instance().putDouble(PrefStore.WIN_Y, stage.getY());
+                        PrefStore.instance().putDouble(PrefStore.WIN_WIDTH, stage.getWidth());
+                        PrefStore.instance().putDouble(PrefStore.WIN_HEIGHT, stage.getHeight());
+                    }
+                });
+
         stage.show();
     }
 
