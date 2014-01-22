@@ -7,7 +7,7 @@ package de.andreaslehmann.securenotefx.business.boundary;
 
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
 import java.util.UUID;
-import javafx.beans.property.ListProperty;
+import javafx.beans.property.ReadOnlyListProperty;
 
 /**
  *
@@ -15,14 +15,13 @@ import javafx.beans.property.ListProperty;
  */
 public interface NoteService {
 
-    ListProperty<NoteEntity> list();
+    ReadOnlyListProperty<NoteEntity> list();
 
     boolean writeNoteEntity(NoteEntity n);
 
-    NoteEntity readNoteEntity( UUID id);
+    NoteEntity readNoteEntity(UUID id);
 
-    int synchronize();
-
+    /*int synchronize();*/
     public void delete(NoteEntity e);
 
 }
