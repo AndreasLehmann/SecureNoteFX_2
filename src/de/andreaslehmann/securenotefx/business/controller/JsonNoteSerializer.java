@@ -27,7 +27,7 @@ public class JsonNoteSerializer {
 
     private final Gson gson;
 
-    JsonNoteSerializer() {
+    public JsonNoteSerializer() {
         super();
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(SimpleStringProperty.class, new SimpleStringPropertyTypeAdapter());
