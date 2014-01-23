@@ -29,7 +29,6 @@
     </VBox>
   </children>
   <stylesheets>
-    <URL value="@../../app.css" />
     <URL value="@securenotefx.css" />
   </stylesheets>
 </AnchorPane>
