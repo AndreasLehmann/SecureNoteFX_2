@@ -1,0 +1,13 @@
+/* 
+    Created on : 20.01.2014, 22:33:04
+    Author     : Andreas
+*/
+
+#titleTextField{
+    -fx-font-family: "Helvetica","Arial";
+    -fx-font-size: 1.7em;
+    -fx-font-weight: bold;
+    
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}

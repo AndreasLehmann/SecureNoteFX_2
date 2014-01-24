@@ -1,0 +1,31 @@
+/* 
+    Created on : 23.01.2014, 22:48:35
+    Author     : Andreas
+*/
+
+.list-view:vertical {
+    -fx-font-family: "Helvetica","Arial";
+    -fx-font-size: 1.1em;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.list-cell:filled:selected:focused, .list-cell:filled:selected {
+    -fx-background-color: linear-gradient(#328BDB 0%, #207BCF 25%, #1973C9 75%, #0A65BF 100%);
+    -fx-background-radius: 6 6 6 6;
+    -fx-text-fill: white; 
+}
+.list-cell { 
+    -fx-text-fill: black; 
+    -fx-border-color: transparent transparent darkgray transparent;        
+    -fx-border-width: .3px;        
+    -fx-border-insets: 0 10 0 5;        
+
+}
+.list-cell:odd { -fx-background-color: transparent;  }
+.list-cell:even { -fx-background-color: transparent;}
+.list-cell:filled:hover { 
+    -fx-background-color: #0093ff;
+    -fx-background-radius: 6 6 6 6;
+    -fx-text-fill: white; 
+}
