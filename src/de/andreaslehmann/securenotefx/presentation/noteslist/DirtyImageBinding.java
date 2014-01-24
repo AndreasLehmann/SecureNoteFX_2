@@ -26,7 +26,7 @@ public class DirtyImageBinding extends ObjectBinding<Image> {
 
     @Override
     protected Image computeValue() {
-        if (note.isDirty()) {
+        if (!note.isSyncronizedProperty().get()) {
             return image;
         } else {
             return null;

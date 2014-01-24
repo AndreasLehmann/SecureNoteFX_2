@@ -58,7 +58,7 @@ public class NoteListCell extends ListCell<NoteEntity> {
             // Icon binden
             final DirtyImageBinding dib = new DirtyImageBinding(note, image);
             // DirtyImageBinding aktualisieren, falls isDirty sich ändert.
-            note.isDirtyProperty().addListener(new InvalidationListener() {
+            note.isSyncronizedProperty().addListener(new InvalidationListener() {
                 @Override
                 public void invalidated(Observable o) {
                     dib.invalidate();
