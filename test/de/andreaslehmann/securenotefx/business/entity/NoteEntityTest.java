@@ -261,7 +261,7 @@ public class NoteEntityTest {
         NoteEntity n;
         n = new NoteEntity("A", "B");
         // TEST
-        n.setTitle("A");
+        n.setTitle("A"); // Title is already "A"
         assertEquals(false, n.isDirty());
     }
 
@@ -412,6 +412,60 @@ public class NoteEntityTest {
         bodyproperty.setValue("B");
         
         assertEquals(false, n.isDirty());
+    }
+    
+    @Test
+    public void testSyncronizedFlag_AfterTitle1() {
+        System.out.println("SyncronizedFlag_AfterTitle1");
+        NoteEntity n;
+        n = new NoteEntity("A", "B");
+        assertEquals(true, n.isSyncronized());
+        // TEST
+        n.setTitle("C");
+        assertEquals(false, n.isSyncronized());
+    }
+    
+    @Test
+    public void testSyncronizedFlag_AfterBody() {
+        System.out.println("SyncronizedFlag_AfterBody");
+        NoteEntity n;
+        n = new NoteEntity("A", "B");
+        assertEquals(true, n.isSyncronized());
+        // TEST
+        n.setBody("C");
+        assertEquals(false, n.isSyncronized());
+    }
+    @Test
+    public void testSyncronizedFlag_AfterDirty() {
+        System.out.println("SyncronizedFlag_AfterDirty");
+        NoteEntity n;
+        n = new NoteEntity("A", "B");
+        assertEquals(true, n.isSyncronized());
+        // TEST
+        n.setDirty();
+        assertEquals(false, n.isSyncronized());
+    }
+    
+    @Test
+    public void testSyncronizedFlag_AfterSave1() {
+        System.out.println("SyncronizedFlag_AfterSave1");
+        NoteEntity n;
+        n = new NoteEntity("A", "B");
+        assertEquals(true, n.isSyncronized());
+        // TEST
+        n.setLastSavedOn(10000L);
+        assertEquals(true, n.isSyncronized());
+    }
+    @Test
+    public void testSyncronizedFlag_AfterSave2() {
+        System.out.println("SyncronizedFlag_AfterSave2");
+        NoteEntity n;
+        n = new NoteEntity("A", "B");
+        n.setDirty();
+        assertEquals(false, n.isSyncronized());
+        // TEST
+        n.setLastSavedOn(10000L);
+        assertEquals(false, n.isSyncronized());
     }
     
 }

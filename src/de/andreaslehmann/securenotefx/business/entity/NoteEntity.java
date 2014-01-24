@@ -26,6 +26,7 @@ public class NoteEntity implements Serializable {
     private long lastSavedOn = 0L;
     private long deletedOn = 0L;
     private transient SimpleBooleanProperty dirty;
+    private SimpleBooleanProperty syncronized;
     
     private final transient DirtyListener dirtyListener = new DirtyListener();
 
@@ -37,6 +38,7 @@ public class NoteEntity implements Serializable {
         this.body.addListener(dirtyListener);
         this.title.addListener(dirtyListener);
         this.dirty = new SimpleBooleanProperty(false);
+        this.syncronized=new SimpleBooleanProperty(true);
     }
 
     public NoteEntity(String title, String body) {
@@ -48,6 +50,7 @@ public class NoteEntity implements Serializable {
         this.body.addListener(dirtyListener);
         this.title.addListener(dirtyListener);
         this.dirty = new SimpleBooleanProperty(false);
+        this.syncronized=new SimpleBooleanProperty(true);
     }
 
     public String getTitle() {
@@ -61,6 +64,9 @@ public class NoteEntity implements Serializable {
     public ReadOnlyBooleanProperty isDirtyProperty() {
         return this.dirty;
     }
+        public ReadOnlyBooleanProperty isSyncronizedProperty() {
+        return this.syncronized;
+    }
 
     public void setTitle(String title) {
         // nur setzen, wenn der übergebene Titel != null ist
@@ -68,7 +74,7 @@ public class NoteEntity implements Serializable {
         if (title != null
                 && title.hashCode() != this.title.getValueSafe().hashCode()) {
             this.title.set(title);
-            this.dirty.setValue(true);
+            this.setDirty();
         }
     }
 
@@ -80,7 +86,7 @@ public class NoteEntity implements Serializable {
         if (body != null
                 && body.hashCode() != this.body.getValueSafe().hashCode()) {
             this.body.set(body);
-            this.dirty.setValue(true);
+            this.setDirty();
         }
     }
 
@@ -119,6 +125,7 @@ public class NoteEntity implements Serializable {
 
     public void setDirty() {
         this.dirty.setValue(true);
+        this.syncronized.setValue(false);
     }
 
     @Override
@@ -175,14 +182,21 @@ public class NoteEntity implements Serializable {
         clone.lastSavedOn = this.lastSavedOn;
         clone.deletedOn = this.deletedOn;
         clone.dirty = new SimpleBooleanProperty(this.dirty.getValue());
+        clone.syncronized = new SimpleBooleanProperty(this.syncronized.getValue());
         return clone;
     }
 
     public void delete() {
         this.deletedOn = System.currentTimeMillis();
-        this.dirty.set(true);
+        this.setDirty();
     }
 
+    public boolean isSyncronized() {
+        return this.syncronized.getValue();
+    }
+    void setSyncronized() {
+        this.syncronized.setValue(true);
+    }
     /**
      * Dieser Listener setzt das Dirty-Flag, falls ein Property geändert wurde.
      */
