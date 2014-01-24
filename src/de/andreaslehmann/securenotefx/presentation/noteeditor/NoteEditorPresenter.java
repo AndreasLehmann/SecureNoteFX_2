@@ -67,22 +67,16 @@ public class NoteEditorPresenter implements Initializable {
 
     @FXML
     private void titleTextField_keyReleased(KeyEvent event) {
-        if (this.selectedNotePropery != null && this.selectedNotePropery.get() != null) {
-            this.selectedNotePropery.get().setTitle(titleTextField.getText());
-        }
+        sendChangesToModel();
     }
 
     @FXML
     private void bodyEditor_keyReleased(KeyEvent event) {
-        if (this.selectedNotePropery != null && this.selectedNotePropery.get() != null) {
-            this.selectedNotePropery.get().setBody(bodyEditor.getHtmlText());
-        }
+        sendChangesToModel();
     }
 
     void bodyEditor_ToolbarClicked() {
-        if (this.selectedNotePropery != null && this.selectedNotePropery.get() != null) {
-            this.selectedNotePropery.get().setBody(bodyEditor.getHtmlText());
-        }
+        sendChangesToModel();
     }
 
     private void customizeHTMLEditor() {
@@ -99,4 +93,12 @@ public class NoteEditorPresenter implements Initializable {
             HTMLEditorToolbarWrapper.wrapButtons(bar, this);
         }
     }
+
+    protected void sendChangesToModel() {
+        if (this.selectedNotePropery != null && this.selectedNotePropery.get() != null) {
+            this.selectedNotePropery.get().setTitle(titleTextField.getText());
+            this.selectedNotePropery.get().setBody(bodyEditor.getHtmlText());
+        }
+    }
+
 }
