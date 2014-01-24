@@ -5,7 +5,6 @@
  */
 package de.andreaslehmann.securenotefx.business.entity;
 
-import java.beans.Transient;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
