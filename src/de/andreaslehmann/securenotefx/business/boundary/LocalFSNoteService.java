@@ -56,7 +56,6 @@ public class LocalFSNoteService extends AbstractNoteService implements NoteServi
 
     @Override
     public ReadOnlyListProperty<NoteEntity> list() {
-
         this.noteListProperty.clear();
 
         List<String> directoryListing = readDir();
@@ -176,6 +175,18 @@ public class LocalFSNoteService extends AbstractNoteService implements NoteServi
     public void delete(NoteEntity e) {
         e.delete();
         this.writeNoteEntity(e);
+    }
+
+    /**
+     * Speichere alle veränderten Notizen auf Disk.
+     */
+    public void persistAll() {
+        for (NoteEntity note : noteListProperty) {
+            if(note.isDirty()){
+                writeNoteEntity(note);
+            }
+        }
+                
     }
 
 }
