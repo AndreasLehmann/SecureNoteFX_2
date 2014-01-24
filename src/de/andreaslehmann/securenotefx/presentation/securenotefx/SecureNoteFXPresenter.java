@@ -9,12 +9,14 @@ import de.andreaslehmann.securenotefx.presentation.noteeditor.NoteEditorPresente
 import de.andreaslehmann.securenotefx.presentation.noteeditor.NoteEditorView;
 import de.andreaslehmann.securenotefx.presentation.noteslist.NotesListPresenter;
 import de.andreaslehmann.securenotefx.presentation.noteslist.NotesListView;
+import de.andreaslehmann.securenotefx.utility.StageManager;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialogs;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
@@ -75,10 +77,18 @@ public class SecureNoteFXPresenter implements Initializable {
         VBox.setVgrow(noteEditorView.getView(), Priority.ALWAYS);
         this.middlePane.getChildren().add(noteEditorView.getView());
 
-        
         // "Löschen" Button wird nur enabled, wenn eine Notiz selektiert ist.
-        this.btnDelete.disableProperty().bind( this.notesListPresenter.selectedNoteProperty().isNull());
-        
+        this.btnDelete.disableProperty().bind(this.notesListPresenter.selectedNoteProperty().isNull());
+
     }
 
+    public boolean shutdown() {
+        Dialogs.DialogResponse r = Dialogs.showConfirmDialog(
+                StageManager.getInstance().getPrimaryStage(),
+                "Soll die Anwendung geschlossen werden?",
+                "Anwendung beenden",
+                "SecureNoteFX",
+                Dialogs.DialogOptions.YES_NO);
+        return (r == r.YES);
+    }
 }

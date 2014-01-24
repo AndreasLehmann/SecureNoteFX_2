@@ -1,6 +1,7 @@
 package de.andreaslehmann.securenotefx;
 
 import com.airhacks.afterburner.injection.InjectionProvider;
+import de.andreaslehmann.securenotefx.presentation.securenotefx.SecureNoteFXPresenter;
 import de.andreaslehmann.securenotefx.presentation.securenotefx.SecureNoteFXView;
 import de.andreaslehmann.securenotefx.utility.PrefStore;
 import de.andreaslehmann.securenotefx.utility.StageManager;
@@ -29,7 +30,7 @@ public class MainApp extends Application {
 
         StageManager.getInstance().setPrimaryStage(stage);
 
-        SecureNoteFXView appView = new SecureNoteFXView();
+        final SecureNoteFXView appView = new SecureNoteFXView();
         Scene scene = new Scene(appView.getView());
         stage.setTitle("SecureNote");
         final String uri = getClass().getResource("app.css").toExternalForm();
@@ -40,11 +41,17 @@ public class MainApp extends Application {
         // Fensterposition, -höhe und -breite wiederherstellen
         restoreWindowPosition();
 
+        final SecureNoteFXPresenter p = (SecureNoteFXPresenter) appView.getPresenter();
+
         // Fensterposition, -höhe und -breite sichern, wenn sie verändert wird.
         stage.setOnCloseRequest(
                 new EventHandler<WindowEvent>() {
                     public void handle(final WindowEvent event) {
-                        persistWindowPosition();
+                        if (!p.shutdown()) {
+                            event.consume();
+                        } else {
+                            persistWindowPosition();
+                        }
                     }
                 });
 
