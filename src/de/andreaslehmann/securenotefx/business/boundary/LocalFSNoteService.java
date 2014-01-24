@@ -134,6 +134,10 @@ public class LocalFSNoteService extends AbstractNoteService implements NoteServi
 
     private boolean writeNoteEntity(NoteEntity n, String filepath) {
 
+        if (!n.isDirty()) {
+            return true;
+        }
+
         if (log.isDebugEnabled()) {
             log.debug("write: filepath=" + filepath);
         }
@@ -182,11 +186,11 @@ public class LocalFSNoteService extends AbstractNoteService implements NoteServi
      */
     public void persistAll() {
         for (NoteEntity note : noteListProperty) {
-            if(note.isDirty()){
+            if (note.isDirty()) {
                 writeNoteEntity(note);
             }
         }
-                
+
     }
 
 }
