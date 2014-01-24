@@ -3,6 +3,7 @@ package de.andreaslehmann.securenotefx;
 import com.airhacks.afterburner.injection.InjectionProvider;
 import de.andreaslehmann.securenotefx.presentation.securenotefx.SecureNoteFXView;
 import de.andreaslehmann.securenotefx.utility.PrefStore;
+import de.andreaslehmann.securenotefx.utility.StageManager;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.event.EventHandler;
@@ -26,6 +27,8 @@ public class MainApp extends Application {
             PrefStore.instance().put(PrefStore.LOCAL_BASE_PATH, "f:/tmp/MySecretNoteStorage_A/");
         }
 
+        StageManager.getInstance().setPrimaryStage(stage);
+
         SecureNoteFXView appView = new SecureNoteFXView();
         Scene scene = new Scene(appView.getView());
         stage.setTitle("SecureNote");
@@ -35,19 +38,13 @@ public class MainApp extends Application {
         stage.setScene(scene);
 
         // Fensterposition, -höhe und -breite wiederherstellen
-        stage.setWidth(PrefStore.instance().getDouble(PrefStore.WIN_WIDTH, 1024.0));
-        stage.setHeight(PrefStore.instance().getDouble(PrefStore.WIN_HEIGHT, 600.0));
-        stage.setX(PrefStore.instance().getDouble(PrefStore.WIN_X, 250.0));
-        stage.setY(PrefStore.instance().getDouble(PrefStore.WIN_Y, 250.0));
+        restoreWindowPosition();
 
         // Fensterposition, -höhe und -breite sichern, wenn sie verändert wird.
         stage.setOnCloseRequest(
                 new EventHandler<WindowEvent>() {
                     public void handle(final WindowEvent event) {
-                        PrefStore.instance().putDouble(PrefStore.WIN_X, stage.getX());
-                        PrefStore.instance().putDouble(PrefStore.WIN_Y, stage.getY());
-                        PrefStore.instance().putDouble(PrefStore.WIN_WIDTH, stage.getWidth());
-                        PrefStore.instance().putDouble(PrefStore.WIN_HEIGHT, stage.getHeight());
+                        persistWindowPosition();
                     }
                 });
 
@@ -57,6 +54,25 @@ public class MainApp extends Application {
     @Override
     public void stop() throws Exception {
         InjectionProvider.forgetAll();
+    }
+
+    private void persistWindowPosition() {
+        Stage stage = StageManager.getInstance().getPrimaryStage();
+        // Fensterposition, -höhe und -breite sichern
+        PrefStore.instance().putDouble(PrefStore.WIN_X, stage.getX());
+        PrefStore.instance().putDouble(PrefStore.WIN_Y, stage.getY());
+        PrefStore.instance().putDouble(PrefStore.WIN_WIDTH, stage.getWidth());
+        PrefStore.instance().putDouble(PrefStore.WIN_HEIGHT, stage.getHeight());
+    }
+
+    private void restoreWindowPosition() {
+        Stage stage = StageManager.getInstance().getPrimaryStage();
+        // Fensterposition, -höhe und -breite wiederherstellen
+        stage.setWidth(PrefStore.instance().getDouble(PrefStore.WIN_WIDTH, 1024.0));
+        stage.setHeight(PrefStore.instance().getDouble(PrefStore.WIN_HEIGHT, 600.0));
+        stage.setX(PrefStore.instance().getDouble(PrefStore.WIN_X, 250.0));
+        stage.setY(PrefStore.instance().getDouble(PrefStore.WIN_Y, 250.0));
+
     }
 
     /**
