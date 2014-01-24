@@ -19,15 +19,44 @@ import javafx.beans.value.ObservableValue;
  */
 public class NoteEntity implements Serializable {
 
+    /**
+     * The unique key for this object. It won't chage over the lifetime of the
+     * object.
+     */
     private UUID uniqueKey;
+    /**
+     * Note title
+     */
     private final SimpleStringProperty title;
+    /**
+     * note body or content
+     */
     private final SimpleStringProperty body;
+    /**
+     * timestamp when this note was created
+     */
     private long createdOn = 0L;
+    /**
+     * timestamp when this note was last saved to disk
+     */
     private long lastSavedOn = 0L;
-    private long deletedOn = 0L;
-    private transient SimpleBooleanProperty dirty;
-    private SimpleBooleanProperty syncronized;
     
+    /**
+     * timestamp when this note was deleted
+     * we do not delete anythis, it gets marked as 'deleted', only.
+     */
+    private long deletedOn = 0L;
+    
+    /**
+     * indicated that the note was changed but wasn't saved to disk, already
+     */
+    private transient SimpleBooleanProperty dirty;
+
+    /**
+     * indicated that the note was changed but wasn't syncronized to the cloud, alredy.
+     */
+    private SimpleBooleanProperty syncronized;
+
     private final transient DirtyListener dirtyListener = new DirtyListener();
 
     public NoteEntity() {
@@ -38,7 +67,7 @@ public class NoteEntity implements Serializable {
         this.body.addListener(dirtyListener);
         this.title.addListener(dirtyListener);
         this.dirty = new SimpleBooleanProperty(false);
-        this.syncronized=new SimpleBooleanProperty(true);
+        this.syncronized = new SimpleBooleanProperty(true);
     }
 
     public NoteEntity(String title, String body) {
@@ -50,7 +79,7 @@ public class NoteEntity implements Serializable {
         this.body.addListener(dirtyListener);
         this.title.addListener(dirtyListener);
         this.dirty = new SimpleBooleanProperty(false);
-        this.syncronized=new SimpleBooleanProperty(true);
+        this.syncronized = new SimpleBooleanProperty(true);
     }
 
     public String getTitle() {
@@ -64,7 +93,8 @@ public class NoteEntity implements Serializable {
     public ReadOnlyBooleanProperty isDirtyProperty() {
         return this.dirty;
     }
-        public ReadOnlyBooleanProperty isSyncronizedProperty() {
+
+    public ReadOnlyBooleanProperty isSyncronizedProperty() {
         return this.syncronized;
     }
 
@@ -194,9 +224,11 @@ public class NoteEntity implements Serializable {
     public boolean isSyncronized() {
         return this.syncronized.getValue();
     }
+
     void setSyncronized() {
         this.syncronized.setValue(true);
     }
+
     /**
      * Dieser Listener setzt das Dirty-Flag, falls ein Property geändert wurde.
      */
