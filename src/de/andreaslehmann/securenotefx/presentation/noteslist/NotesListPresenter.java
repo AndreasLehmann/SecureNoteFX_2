@@ -78,6 +78,10 @@ public class NotesListPresenter implements Initializable {
         ChangeListener<NoteEntity> selectionListener = new ChangeListener<NoteEntity>() {
             @Override
             public void changed(ObservableValue<? extends NoteEntity> observable, NoteEntity oldValue, NoteEntity newValue) {
+                if(selectedNote.get()!=null){
+                    service.writeNoteEntity(selectedNote.get());
+                }
+                
                 selectedNote.set(newValue);
                 log.debug("selcted Note changed to:"+ newValue.getTitle());
                 
