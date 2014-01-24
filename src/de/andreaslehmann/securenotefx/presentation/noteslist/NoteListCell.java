@@ -6,10 +6,13 @@
 package de.andreaslehmann.securenotefx.presentation.noteslist;
 
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -50,6 +53,8 @@ public class NoteListCell extends ListCell<NoteEntity> {
             }
             // Title binden
             label.textProperty().bind(note.titleProperty());
+            // Tooltip setzen
+            label.setTooltip(new Tooltip(getTooltip(note)));
             // Icon binden
             final DirtyImageBinding dib = new DirtyImageBinding(note, image);
             // DirtyImageBinding aktualisieren, falls isDirty sich ändert.
@@ -66,4 +71,17 @@ public class NoteListCell extends ListCell<NoteEntity> {
         }
 
     }
+    
+    protected String getTooltip(NoteEntity n){
+        StringBuilder b=new StringBuilder();
+        b.append("Created=");
+        b.append(SimpleDateFormat.getDateTimeInstance().format(new Date(n.getCreatedOn())));
+        b.append("\nLastSaved=");
+        b.append(SimpleDateFormat.getDateTimeInstance().format(new Date(n.getLastSavedOn())));
+        b.append("\nDeleted=");
+        b.append(SimpleDateFormat.getDateTimeInstance().format(new Date(n.getDeletedOn())));
+        
+        return b.toString();
+    }
+    
 }
