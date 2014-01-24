@@ -101,4 +101,12 @@ public class NoteEditorPresenter implements Initializable {
         }
     }
 
+    /**
+     * Diese Methode wird beim Schließen-Request aufgerufen.
+     * Der Benutzer kann aber noch abbrechen
+     */
+    public void onShutdown() {
+        sendChangesToModel();
+    }
+
 }

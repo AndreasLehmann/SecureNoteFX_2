@@ -47,7 +47,7 @@ public class MainApp extends Application {
         stage.setOnCloseRequest(
                 new EventHandler<WindowEvent>() {
                     public void handle(final WindowEvent event) {
-                        if (!p.shutdown()) {
+                        if (!p.shutdownAllowed()) {
                             event.consume();
                         } else {
                             persistWindowPosition();

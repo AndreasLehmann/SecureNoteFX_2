@@ -108,4 +108,8 @@ public class NotesListPresenter implements Initializable {
         return this.selectedNote;
     }
 
+    public void onShutdown() {
+        service.persistAll();
+    }
+
 }

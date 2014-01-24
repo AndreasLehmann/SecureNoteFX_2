@@ -32,6 +32,7 @@ public class SecureNoteFXPresenter implements Initializable {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+
     @FXML
     private VBox leftPane;
     @FXML
@@ -80,9 +81,15 @@ public class SecureNoteFXPresenter implements Initializable {
         // "Löschen" Button wird nur enabled, wenn eine Notiz selektiert ist.
         this.btnDelete.disableProperty().bind(this.notesListPresenter.selectedNoteProperty().isNull());
 
+
     }
 
-    public boolean shutdown() {
+    public boolean shutdownAllowed() {
+
+        // send shutdown request to child windows
+        this.noteEditorPresenter.onShutdown();
+        this.notesListPresenter.onShutdown();
+
         Dialogs.DialogResponse r = Dialogs.showConfirmDialog(
                 StageManager.getInstance().getPrimaryStage(),
                 "Soll die Anwendung geschlossen werden?",
