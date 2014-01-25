@@ -19,9 +19,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ReadOnlyListProperty;
-import javafx.beans.property.SimpleListProperty;
 import javax.inject.Inject;
 import org.slf4j.LoggerFactory;
 
@@ -44,8 +41,7 @@ public class LocalFSNoteService extends AbstractNoteService implements NoteServi
     public String basePath = null;
     private final JSONNameHelper jsonFilenameFilter = new JSONNameHelper();
 
-    ListProperty<NoteEntity> noteListProperty = new SimpleListProperty<>(javafx.collections.FXCollections.observableList(new ArrayList<NoteEntity>()));
-
+    //ListProperty<NoteEntity> noteListProperty = new SimpleListProperty<>(javafx.collections.FXCollections.observableList(new ArrayList<NoteEntity>()));
     public LocalFSNoteService() {
         super();
         this.basePath = PrefStore.instance().get(PrefStore.LOCAL_BASE_PATH, null);
@@ -55,18 +51,21 @@ public class LocalFSNoteService extends AbstractNoteService implements NoteServi
     }
 
     @Override
-    public ReadOnlyListProperty<NoteEntity> list() {
-        this.noteListProperty.clear();
+    public List<NoteEntity> list() {
+        //this.noteListProperty.clear();
+        List<NoteEntity> list = new ArrayList<>();
 
         List<String> directoryListing = readDir();
         for (String path : directoryListing) {
             NoteEntity n = readNoteEntity(path);
             if (n != null) {
-                this.noteListProperty.add(n);
+                //this.noteListProperty.add(n);
+                list.add(n);
             }
 
         }
-        return this.noteListProperty;
+        //return this.noteListProperty;
+        return list;
     }
 
     private List<String> readDir() {
@@ -180,17 +179,4 @@ public class LocalFSNoteService extends AbstractNoteService implements NoteServi
         e.delete();
         this.writeNoteEntity(e);
     }
-
-    /**
-     * Speichere alle veränderten Notizen auf Disk.
-     */
-    public void persistAll() {
-        for (NoteEntity note : noteListProperty) {
-            if (note.isDirty()) {
-                writeNoteEntity(note);
-            }
-        }
-
-    }
-
 }

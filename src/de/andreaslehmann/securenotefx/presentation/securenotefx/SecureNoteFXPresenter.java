@@ -32,7 +32,6 @@ public class SecureNoteFXPresenter implements Initializable {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-
     @FXML
     private VBox leftPane;
     @FXML
@@ -57,6 +56,7 @@ public class SecureNoteFXPresenter implements Initializable {
     @FXML
     private void btnNewClicked(ActionEvent event) {
         log.debug("btnNewClicked");
+        notesListPresenter.addNewNote();
     }
 
     @Override
@@ -80,7 +80,6 @@ public class SecureNoteFXPresenter implements Initializable {
 
         // "Löschen" Button wird nur enabled, wenn eine Notiz selektiert ist.
         this.btnDelete.disableProperty().bind(this.notesListPresenter.selectedNoteProperty().isNull());
-
 
     }
 

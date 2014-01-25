@@ -56,8 +56,6 @@ public class NotesListPresenter implements Initializable {
         this.notes = FXCollections.observableArrayList();
         this.selectedNote = new SimpleObjectProperty<>();
 
-        notesListView.itemsProperty().get().add(new NoteEntity("Q", "W"));
-
         registerListeners();
         this.loadFromLocalStore();
         setupListView();
@@ -78,30 +76,28 @@ public class NotesListPresenter implements Initializable {
         ChangeListener<NoteEntity> selectionListener = new ChangeListener<NoteEntity>() {
             @Override
             public void changed(ObservableValue<? extends NoteEntity> observable, NoteEntity oldValue, NoteEntity newValue) {
-                if(selectedNote.get()!=null){
+                if (selectedNote.get() != null) {
                     service.writeNoteEntity(selectedNote.get());
                 }
-                
+
                 selectedNote.set(newValue);
-                log.debug("selcted Note changed to:"+ newValue.getTitle());
-                
+                log.debug("selcted Note changed to:" + newValue.getTitle());
+
             }
         };
-   this.notesListView.getSelectionModel().selectedItemProperty().addListener(selectionListener);
+        this.notesListView.getSelectionModel().selectedItemProperty().addListener(selectionListener);
     }
 
     /**
      * ListView konfigurieren und Modell setzen
      */
     private void setupListView() {
-        
+
         this.notesListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         this.notesListView.itemsProperty().set(this.notes);
         // setze CellFactory um den Titel der Notizen anzuzeigen
         this.notesListView.setCellFactory(new NoteTitleCellFactory());
 
-        
-        
     }
 
     public ObservableList<NoteEntity> getNotesProperty() {
@@ -113,7 +109,24 @@ public class NotesListPresenter implements Initializable {
     }
 
     public void onShutdown() {
-        service.persistAll();
+        this.saveAllModified();
+    }
+
+    public void addNewNote() {
+        NoteEntity n = new NoteEntity("Neue Notiz", "");
+        n.setDirty();
+
+        this.notes.add(n);
+        this.notesListView.getSelectionModel().select(n);
+        this.selectedNote.set(n);
+    }
+
+    private void saveAllModified() {
+        for (NoteEntity note : notes) {
+            if (note.isDirty()) {
+                service.writeNoteEntity(note);
+            }
+        }
     }
 
 }

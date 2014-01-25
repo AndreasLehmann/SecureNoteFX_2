@@ -6,8 +6,8 @@
 package de.andreaslehmann.securenotefx.business.boundary;
 
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
+import java.util.List;
 import java.util.UUID;
-import javafx.beans.property.ReadOnlyListProperty;
 
 /**
  *
@@ -15,7 +15,7 @@ import javafx.beans.property.ReadOnlyListProperty;
  */
 public interface NoteService {
 
-    ReadOnlyListProperty<NoteEntity> list();
+    List<NoteEntity> list();
 
     boolean writeNoteEntity(NoteEntity n);
 
