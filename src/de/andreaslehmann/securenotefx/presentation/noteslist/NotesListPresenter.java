@@ -64,8 +64,10 @@ public class NotesListPresenter implements Initializable {
 
     private void loadFromLocalStore() {
         List<NoteEntity> all = service.list();
-        for (NoteEntity e : all) {
-            notes.add(e);
+        for (NoteEntity n : all) {
+            if (!n.isDeleted()) {
+                notes.add(n);
+            }
         }
     }
 
