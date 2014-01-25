@@ -8,6 +8,7 @@ package de.andreaslehmann.securenotefx.presentation.noteeditor;
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -56,6 +57,14 @@ public class NoteEditorPresenter implements Initializable {
                 titleTextField.setText(newNote.getTitle());
                 bodyEditor.setHtmlText(newNote.getBody());
                 bodyEditor.disableProperty().set(false);
+                
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        titleTextField.requestFocus();
+                    }
+                });
+
             }
         };
         this.selectedNotePropery.addListener(selectionListener);
@@ -102,8 +111,8 @@ public class NoteEditorPresenter implements Initializable {
     }
 
     /**
-     * Diese Methode wird beim Schließen-Request aufgerufen.
-     * Der Benutzer kann aber noch abbrechen
+     * Diese Methode wird beim Schließen-Request aufgerufen. Der Benutzer kann
+     * aber noch abbrechen
      */
     public void onShutdown() {
         sendChangesToModel();
