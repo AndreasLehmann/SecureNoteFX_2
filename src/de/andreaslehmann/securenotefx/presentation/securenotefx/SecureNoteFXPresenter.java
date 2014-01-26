@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialogs;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
@@ -50,6 +51,8 @@ public class SecureNoteFXPresenter implements Initializable {
     private Button btnDelete;
     @FXML
     private SplitPane splitPane;
+    @FXML
+    private ToggleButton btnTrashcan;
 
     @FXML
     private void btnDeleteClicked(ActionEvent event) {
@@ -85,6 +88,9 @@ public class SecureNoteFXPresenter implements Initializable {
         // "Löschen" Button wird nur enabled, wenn eine Notiz selektiert ist.
         this.btnDelete.disableProperty().bind(this.notesListPresenter.selectedNoteProperty().isNull());
 
+        // Binde den "ShowDeleted" Button an das Property der NotizenListe
+        this.notesListPresenter.showDeletedNotesProperty().bind(this.btnTrashcan.selectedProperty());
+        
     }
 
     public boolean shutdownAllowed() {

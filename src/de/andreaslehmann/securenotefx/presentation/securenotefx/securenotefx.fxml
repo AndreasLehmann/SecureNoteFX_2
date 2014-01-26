@@ -16,6 +16,7 @@
           <items>
             <Button fx:id="btnNew" mnemonicParsing="false" onAction="#btnNewClicked" text="Neu" />
             <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnDeleteClicked" text="Löschen" />
+            <ToggleButton fx:id="btnTrashcan" mnemonicParsing="false" opacity="1.0" selected="false" text="Papierkorb" />
           </items>
         </ToolBar>
         <SplitPane id="splitter" fx:id="splitPane" dividerPositions="0.37570303712035996, 0.8020247469066367" focusTraversable="true" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="SOMETIMES">
