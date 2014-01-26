@@ -54,6 +54,7 @@ public class SecureNoteFXPresenter implements Initializable {
     @FXML
     private void btnDeleteClicked(ActionEvent event) {
         log.debug("btnDeleteClicked");
+        notesListPresenter.deleteSelectedNote();
     }
 
     @FXML

@@ -54,16 +54,26 @@ public class NoteEditorPresenter implements Initializable {
         ChangeListener<NoteEntity> selectionListener = new ChangeListener<NoteEntity>() {
             @Override
             public void changed(ObservableValue<? extends NoteEntity> observable, NoteEntity oldNote, NoteEntity newNote) {
-                titleTextField.setText(newNote.getTitle());
-                bodyEditor.setHtmlText(newNote.getBody());
-                bodyEditor.disableProperty().set(false);
-                
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        titleTextField.requestFocus();
-                    }
-                });
+                if (newNote != null) {
+                    titleTextField.setText(newNote.getTitle());
+                    titleTextField.disableProperty().set(false);
+                    bodyEditor.setHtmlText(newNote.getBody());
+                    bodyEditor.disableProperty().set(false);
+
+// it seems a little strage if suddenly the titel is selected - disabled for now!
+//                    Platform.runLater(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            titleTextField.requestFocus();
+//                        }
+//                    });
+                } else {
+                    titleTextField.clear();
+                    titleTextField.disableProperty().set(true);
+                    bodyEditor.setHtmlText(" ");
+                    bodyEditor.disableProperty().set(true);
+                    
+                }
 
             }
         };

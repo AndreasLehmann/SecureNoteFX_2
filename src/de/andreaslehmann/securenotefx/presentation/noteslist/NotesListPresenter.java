@@ -123,6 +123,13 @@ public class NotesListPresenter implements Initializable {
         this.selectedNote.set(n);
     }
 
+    public void deleteSelectedNote() {
+        NoteEntity n = this.selectedNote.get();
+        this.selectedNote.set(null);
+        this.notes.remove(n);
+        this.service.delete(n);
+    }
+    
     private void saveAllModified() {
         for (NoteEntity note : notes) {
             if (note.isDirty()) {
