@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialogs;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
@@ -47,6 +48,8 @@ public class SecureNoteFXPresenter implements Initializable {
     private Button btnNew;
     @FXML
     private Button btnDelete;
+    @FXML
+    private SplitPane splitPane;
 
     @FXML
     private void btnDeleteClicked(ActionEvent event) {

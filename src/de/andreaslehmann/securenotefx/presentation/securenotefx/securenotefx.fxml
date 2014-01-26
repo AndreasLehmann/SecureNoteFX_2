@@ -18,7 +18,7 @@
             <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnDeleteClicked" text="Löschen" />
           </items>
         </ToolBar>
-        <SplitPane id="splitter" dividerPositions="0.37570303712035996, 0.8020247469066367" focusTraversable="true" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="SOMETIMES">
+        <SplitPane id="splitter" fx:id="splitPane" dividerPositions="0.37570303712035996, 0.8020247469066367" focusTraversable="true" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="SOMETIMES">
           <items>
             <VBox fx:id="leftPane" prefHeight="-1.0" prefWidth="100.0" />
             <VBox fx:id="middlePane" prefHeight="200.0" prefWidth="100.0" />
