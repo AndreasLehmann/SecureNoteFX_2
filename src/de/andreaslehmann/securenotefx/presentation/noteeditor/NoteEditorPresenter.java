@@ -8,7 +8,6 @@ package de.andreaslehmann.securenotefx.presentation.noteeditor;
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -72,7 +71,7 @@ public class NoteEditorPresenter implements Initializable {
                     titleTextField.disableProperty().set(true);
                     bodyEditor.setHtmlText(" ");
                     bodyEditor.disableProperty().set(true);
-                    
+
                 }
 
             }
