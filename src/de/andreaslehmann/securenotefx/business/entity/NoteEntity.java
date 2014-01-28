@@ -220,6 +220,11 @@ public class NoteEntity implements Serializable {
         this.deletedOn = System.currentTimeMillis();
         this.setDirty();
     }
+    
+    public void undelete() {
+        this.deletedOn = 0L;
+        this.setDirty();
+    }
 
     public boolean isSyncronized() {
         return this.syncronized.getValue();

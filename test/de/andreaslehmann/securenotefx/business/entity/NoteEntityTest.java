@@ -5,7 +5,6 @@
  */
 package de.andreaslehmann.securenotefx.business.entity;
 
-import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import org.junit.Test;
@@ -137,7 +136,6 @@ public class NoteEntityTest {
         NoteEntity instance = new NoteEntity();
 
         assertSame(0L, instance.getDeletedOn());
-
         assertTrue((instance.getDeletedOn() - now) < 5); // Löschung innerhalb 5ms
 
     }
@@ -227,7 +225,16 @@ public class NoteEntityTest {
         n.delete();
         assertTrue(n.isDeleted());
     }
-        
+    @Test
+    public void testUnDeleted() {
+        System.out.println("unDelete");
+        NoteEntity n = new NoteEntity();
+        n.delete();
+        n.undelete();
+        assertFalse(n.isDeleted());
+    }
+
+    
     @Test
     public void testDirty_Constr1() {
         System.out.println("Dirty_Constr1");
