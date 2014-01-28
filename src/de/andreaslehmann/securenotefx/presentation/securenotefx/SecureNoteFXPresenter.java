@@ -88,6 +88,10 @@ public class SecureNoteFXPresenter implements Initializable {
         // "Löschen" Button wird nur enabled, wenn eine Notiz selektiert ist.
         this.btnDelete.disableProperty().bind(this.notesListPresenter.selectedNoteProperty().isNull());
 
+        // "Löschen" und "Neu" Button nur aktivieren, wenn nicht in Papierkorb-Modus
+        this.btnDelete.disableProperty().bind(this.btnTrashcan.selectedProperty());
+        this.btnNew.disableProperty().bind(this.btnTrashcan.selectedProperty());
+        
         // Binde den "ShowDeleted" Button an das Property der NotizenListe
         this.notesListPresenter.showDeletedNotesProperty().bind(this.btnTrashcan.selectedProperty());
         
