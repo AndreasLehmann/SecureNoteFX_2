@@ -6,6 +6,8 @@
 
 package de.andreaslehmann.securenotefx.business.boundary.remote;
 
+import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
+import java.util.List;
 import javax.swing.Icon;
 
 /**
@@ -26,6 +28,16 @@ public class FileSystemStorageProvider implements StorageProvider {
 
     @Override
     public Icon getProviderIcon() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<NoteEntity> list() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean remoteWrite(NoteEntity note) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

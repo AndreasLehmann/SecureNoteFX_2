@@ -3,37 +3,49 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package de.andreaslehmann.securenotefx.business.boundary.remote;
 
+import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
+import java.util.List;
 import javax.swing.Icon;
 
 /**
  * Gemeinsames Interface aller StorageProvider.
- * 
- * Das Interface stellt die "Stategie" im Sinne des
- * GoF "Strategie-Musters" dar.
- * 
+ *
+ * Das Interface stellt die "Stategie" im Sinne des GoF "Strategie-Musters" dar.
+ *
  * @author Andreas
  */
 public interface StorageProvider {
-    
+
     /**
-     * Gibt einen menschenlesbaren String zurück,
-     * mit dem der Benutzer sich zwischen den verschiendenen
-     * Providern entscheiden kann.
-     * 
+     * Gibt einen menschenlesbaren String zurück, mit dem der Benutzer sich
+     * zwischen den verschiendenen Providern entscheiden kann.
+     *
      * @return name des Providers (z.B. Dropbox, OwnCloud, usw.)
      */
     String getProviderName();
-    
+
     /**
      * Gibt ein Icon zurück, das dem Benutzer in der Auswahl der Provider
      * angezeigt wird. z.B. DropBox Icon.
-     * 
-     * @return  Provider Icon
+     *
+     * @return Provider Icon
      */
     Icon getProviderIcon();
-    
-    
+
+    /**
+     * Gibt eine Liste der gespeicherten Notizen zurück.
+     * 
+     * @return Notizliste
+     */
+    List<NoteEntity> list();
+
+    /**
+     * Schreibt eine Änderung zurück. Änderungen können auch neue Notizen sein.
+     * 
+     * @param note  die geänderte oder neue Notiz
+     * @return  true, wenn die Operation geklappt hat
+     */
+    boolean remoteWrite(NoteEntity note);
 }
