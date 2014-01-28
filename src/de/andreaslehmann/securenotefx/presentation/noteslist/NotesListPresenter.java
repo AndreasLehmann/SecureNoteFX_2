@@ -20,9 +20,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javax.inject.Inject;
 import org.slf4j.Logger;
@@ -35,6 +39,9 @@ import org.slf4j.LoggerFactory;
 public class NotesListPresenter implements Initializable {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
+
+    ContextMenu contextMenu4DeletedNotes = null;
+    NoteTitleCellFactory noteTitleCellFactory = new NoteTitleCellFactory();
 
     @Inject
     private LocalFSNoteService service;
@@ -63,9 +70,14 @@ public class NotesListPresenter implements Initializable {
         this.selectedNote = new SimpleObjectProperty<>();
         this.showDeleted = new SimpleBooleanProperty(false);
 
+        buildContextMenues();
         registerListeners();
+
+        // ListView konfigurieren und Modell setzen
+        this.notesListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        this.notesListView.itemsProperty().set(this.notes);
+
         reload();
-        setupListView();
 
         // Bei Änderungen der "ShowDeleted"_Properties: Liste neu einlesen
         this.showDeletedNotesProperty().addListener(new ChangeListener<Boolean>() {
@@ -81,14 +93,21 @@ public class NotesListPresenter implements Initializable {
     private void reload() {
         List<NoteEntity> all = service.list();
         notes.clear();
+
+        if (this.showDeleted.getValue()) { // spezielles Kontextmenü für gelöschte
+            this.notesListView.setCellFactory(ContextMenuListCell.<NoteEntity>forListView(this.contextMenu4DeletedNotes, this.noteTitleCellFactory));
+        } else {
+            this.notesListView.setCellFactory(this.noteTitleCellFactory);
+        }
+
         for (NoteEntity n : all) {
             if (this.showDeleted.getValue()) { // nur gelöschte
-                if (n.isDeleted()) { 
-                    notes.add(n);
+                if (n.isDeleted()) {
+                    this.notes.add(n);
                 }
             } else {
                 if (!n.isDeleted()) { // nur anzeigen, wenn nicht gelöscht
-                    notes.add(n);
+                    this.notes.add(n);
                 }
             }
         }
@@ -116,16 +135,20 @@ public class NotesListPresenter implements Initializable {
         this.notesListView.getSelectionModel().selectedItemProperty().addListener(selectionListener);
     }
 
-    /**
-     * ListView konfigurieren und Modell setzen
-     */
-    private void setupListView() {
+    private void buildContextMenues() {
+        // Erzeuge KontextmenüMenuItem 
+        MenuItem restore = new MenuItem("Wiederherstellen");
+        // Eventhandler für Context menüs
+        restore.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                log.debug("restore item: " + notesListView.getSelectionModel().getSelectedItem());
+                restoreNote(notesListView.getSelectionModel().getSelectedItem());
+            }
 
-        this.notesListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        this.notesListView.itemsProperty().set(this.notes);
-        // setze CellFactory um den Titel der Notizen anzuzeigen
-        this.notesListView.setCellFactory(new NoteTitleCellFactory());
-
+        });
+        this.contextMenu4DeletedNotes = new ContextMenu();
+        this.contextMenu4DeletedNotes.getItems().add(restore);
     }
 
     public ObservableList<NoteEntity> getNotesProperty() {
@@ -142,6 +165,13 @@ public class NotesListPresenter implements Initializable {
 
     public void onShutdown() {
         this.saveAllModified();
+    }
+
+    private void restoreNote(NoteEntity selectedItem) {
+        
+        this.selectedNote.set(null);
+        this.notes.remove(selectedItem);
+        this.service.undelete(selectedItem);
     }
 
     public void addNewNote() {
