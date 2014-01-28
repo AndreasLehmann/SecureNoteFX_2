@@ -8,6 +8,7 @@ package de.andreaslehmann.securenotefx.presentation.noteslist;
 import de.andreaslehmann.securenotefx.business.boundary.LocalFSNoteService;
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.BooleanProperty;
@@ -43,6 +44,8 @@ public class NotesListPresenter implements Initializable {
     ContextMenu contextMenu4DeletedNotes = null;
     NoteTitleCellFactory noteTitleCellFactory = new NoteTitleCellFactory();
 
+    private final ComparatorNotesByTitle comparatorNotes_byTitle = new ComparatorNotesByTitle();
+    
     @Inject
     private LocalFSNoteService service;
 
@@ -111,6 +114,7 @@ public class NotesListPresenter implements Initializable {
                 }
             }
         }
+        Collections.sort(this.notes, comparatorNotes_byTitle);
     }
 
     /**
