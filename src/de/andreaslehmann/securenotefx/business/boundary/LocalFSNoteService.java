@@ -175,8 +175,13 @@ public class LocalFSNoteService extends AbstractNoteService implements NoteServi
     }
 
     @Override
-    public void delete(NoteEntity e) {
-        e.delete();
-        this.writeNoteEntity(e);
+    public void delete(NoteEntity n) {
+        n.delete();
+        this.writeNoteEntity(n);
+    }
+
+    public void undelete(NoteEntity n) {
+        n.undelete();
+        this.writeNoteEntity(n);
     }
 }
