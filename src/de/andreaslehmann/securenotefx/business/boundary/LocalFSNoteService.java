@@ -5,7 +5,7 @@
  */
 package de.andreaslehmann.securenotefx.business.boundary;
 
-import de.andreaslehmann.securenotefx.business.controller.JsonNoteSerializer;
+import de.andreaslehmann.securenotefx.utility.JsonNoteSerializer;
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
 import de.andreaslehmann.securenotefx.utility.PrefStore;
 import java.io.BufferedReader;

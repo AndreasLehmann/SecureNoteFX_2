@@ -1,5 +1,6 @@
-package de.andreaslehmann.securenotefx.business.controller;
+package de.andreaslehmann.securenotefx.utility;
 
+import de.andreaslehmann.securenotefx.utility.JsonNoteSerializer;
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
 import org.junit.Test;
 import static org.junit.Assert.*;
