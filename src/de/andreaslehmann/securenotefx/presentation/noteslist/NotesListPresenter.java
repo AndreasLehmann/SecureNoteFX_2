@@ -45,7 +45,7 @@ public class NotesListPresenter implements Initializable {
     NoteTitleCellFactory noteTitleCellFactory = new NoteTitleCellFactory();
 
     private final ComparatorNotesByTitle comparatorNotes_byTitle = new ComparatorNotesByTitle();
-    
+
     @Inject
     private LocalFSNoteService service;
 
@@ -172,7 +172,7 @@ public class NotesListPresenter implements Initializable {
     }
 
     private void restoreNote(NoteEntity selectedItem) {
-        
+
         this.selectedNote.set(null);
         this.notes.remove(selectedItem);
         this.service.undelete(selectedItem);
@@ -189,6 +189,9 @@ public class NotesListPresenter implements Initializable {
 
     public void deleteSelectedNote() {
         NoteEntity n = this.selectedNote.get();
+        if (n == null) {
+            return;
+        }
         this.selectedNote.set(null);
         this.notes.remove(n);
         this.service.delete(n);
