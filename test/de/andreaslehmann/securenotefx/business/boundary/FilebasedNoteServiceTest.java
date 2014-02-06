@@ -26,6 +26,8 @@ import static org.junit.Assert.*;
 /**
  *
  * @author Andreas
+ * @deprecated just for reference
+ *
  */
 public class FilebasedNoteServiceTest {
 
@@ -134,7 +136,7 @@ public class FilebasedNoteServiceTest {
         // ##########################################
         /// Test 1 alles ist unverändert
         service.synchronize(); // neu einlesen!
-        l1 = service.list().getValue(); 
+        l1 = service.list().getValue();
         assertEquals(l1.toString(), baseList.toString()); // sind die Listen nach dem erneuten Einlesen noch gleich?
 
         // ##########################################
@@ -160,7 +162,7 @@ public class FilebasedNoteServiceTest {
         List<NoteEntity> l1 = service.list().getValue();
         baseList = clone(l1); // clone die Liste und alle Elemente!
 
-         // ##########################################
+        // ##########################################
         /// Test 3 ein NoteEntity wurde geändert
         try {
             modifyElement(); // Ändere eine Datei

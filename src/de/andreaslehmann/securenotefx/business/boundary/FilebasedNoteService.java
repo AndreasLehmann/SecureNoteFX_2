@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -35,12 +35,13 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-
 /**
  *
  * @author AndrremoteNoteas
+ * @deprecated just for reference
+ *
  */
-public class FilebasedNoteService extends AbstractNoteService implements NoteService {
+public class FilebasedNoteService extends AbstractNoteService {
 
     protected static final String FILE_SUFFIX = ".json";
     public final String basePath;
@@ -60,7 +61,6 @@ public class FilebasedNoteService extends AbstractNoteService implements NoteSer
 
     }
 
-    @Override
     public ListProperty<NoteEntity> list() {
         if (noteList == null || noteList.size() < 1) {
             this.synchronize();
@@ -81,7 +81,6 @@ public class FilebasedNoteService extends AbstractNoteService implements NoteSer
         return filenames;
     }
 
-    @Override
     public NoteEntity readNoteEntity(UUID id) {
         return readNoteEntity(buildFilename(id));
     }
@@ -177,11 +176,10 @@ public class FilebasedNoteService extends AbstractNoteService implements NoteSer
         return changes.size();
     }
 
-    @Override
     public void delete(NoteEntity e) {
         e.delete();
         this.writeNoteEntity(e);
-        
+
     }
 
     private static class SimpleStringPropertyTypeAdapter implements JsonSerializer<SimpleStringProperty>, JsonDeserializer<SimpleStringProperty> {
@@ -241,10 +239,9 @@ public class FilebasedNoteService extends AbstractNoteService implements NoteSer
     /**
      * Gibt alle Änderungen zwischen den beiden Listes als ChangeSet zuürck.
      *
-     * Möglich Ändrerungen: ADD, DELETE, UPDATE, usw.
-     * (siehe CHANGE_TYPE)
-     * 
-     * @return      Liste der Änderungen
+     * Möglich Ändrerungen: ADD, DELETE, UPDATE, usw. (siehe CHANGE_TYPE)
+     *
+     * @return Liste der Änderungen
      */
     public List<ChangeSet> getChanges() {
         // Erzeuge die Liste der Remote-Elemente

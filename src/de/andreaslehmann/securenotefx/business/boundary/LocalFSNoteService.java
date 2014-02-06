@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  * @author Andreas
  *
  */
-public class LocalFSNoteService extends AbstractNoteService implements NoteService {
+public class LocalFSNoteService extends AbstractNoteService {
 
     @Inject
     private JsonNoteSerializer jsonService;
@@ -50,7 +50,6 @@ public class LocalFSNoteService extends AbstractNoteService implements NoteServi
         }
     }
 
-    @Override
     public List<NoteEntity> list() {
         //this.noteListProperty.clear();
         List<NoteEntity> list = new ArrayList<>();
@@ -80,7 +79,6 @@ public class LocalFSNoteService extends AbstractNoteService implements NoteServi
         return filenames;
     }
 
-    @Override
     public NoteEntity readNoteEntity(UUID id) {
         return readNoteEntity(JSONNameHelper.buildFilename(basePath, id));
     }
@@ -174,7 +172,6 @@ public class LocalFSNoteService extends AbstractNoteService implements NoteServi
         return true;
     }
 
-    @Override
     public void delete(NoteEntity n) {
         n.delete();
         this.writeNoteEntity(n);
