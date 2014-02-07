@@ -35,17 +35,36 @@ public interface StorageProvider {
     Icon getProviderIcon();
 
     /**
+     * Prüft, ob der Speicherort verfügbar ist und es sich um ein gültigesn
+     * Speicherort handelt.
+     *
+     * @return false im Fehlerfall
+     */
+    boolean init();
+
+    /**
+     * Richtet den Speicherplatz zur ersten Verwendung ein. Falls der
+     * Speicherplatz bereits mit Daten belegt ist oder nicht gefunden werden
+     * kann, gibt die Methode 'false' zurück. Über den Parameter 'force' kann
+     * die Erzeugung erzwungen werden.
+     *
+     * @param force erzwingt das Erzeugen
+     * @return true, wenn alles geklappt hat
+     */
+    boolean create(boolean force);
+
+    /**
      * Gibt eine Liste der gespeicherten Notizen zurück.
-     * 
+     *
      * @return Notizliste
      */
     List<NoteEntity> list();
 
     /**
      * Schreibt eine Änderung zurück. Änderungen können auch neue Notizen sein.
-     * 
-     * @param note  die geänderte oder neue Notiz
-     * @return  true, wenn die Operation geklappt hat
+     *
+     * @param note die geänderte oder neue Notiz
+     * @return true, wenn die Operation geklappt hat
      */
     boolean remoteWrite(NoteEntity note);
 }
