@@ -50,20 +50,34 @@ public class LocalFSNoteService extends AbstractNoteService {
         }
     }
 
+    /**
+     * Prüfe ob der BasePath gesetzt ist und erzeug das Verzeichnis,
+     * falls nicht bereits vorhanden.
+     * 
+     * @return true, wenn alles bereit ist.
+     */
+    public boolean init() {
+        if (this.basePath == null) {
+            log.error("No basepath set !");
+            return false;
+        }
+        File f = new File(this.basePath);
+        if (!f.exists()) {
+            f.mkdirs();
+        }
+        return true;
+    }
+
     public List<NoteEntity> list() {
-        //this.noteListProperty.clear();
         List<NoteEntity> list = new ArrayList<>();
 
         List<String> directoryListing = readDir();
         for (String path : directoryListing) {
             NoteEntity n = readNoteEntity(path);
             if (n != null) {
-                //this.noteListProperty.add(n);
                 list.add(n);
             }
-
         }
-        //return this.noteListProperty;
         return list;
     }
 
@@ -71,6 +85,10 @@ public class LocalFSNoteService extends AbstractNoteService {
         File dir = new File(basePath);
         File[] files = dir.listFiles(jsonFilenameFilter);
         ArrayList<String> filenames = new ArrayList<>();
+        if (files == null) {
+            return filenames;
+        }
+
         for (File f : files) {
             if (f.isFile()) {
                 filenames.add(f.getAbsolutePath());

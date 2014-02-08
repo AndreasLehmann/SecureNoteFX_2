@@ -80,6 +80,7 @@ public class NotesListPresenter implements Initializable {
         this.notesListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         this.notesListView.itemsProperty().set(this.notes);
 
+        this.service.init();
         reload();
 
         // Bei Änderungen der "ShowDeleted"_Properties: Liste neu einlesen
