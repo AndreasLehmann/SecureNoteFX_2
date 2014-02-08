@@ -10,14 +10,14 @@ import java.util.UUID;
  */
 public class JSONNameHelper implements FilenameFilter {
 
-    protected static final String FILE_SUFFIX = ".json";
+    public static final String FILE_SUFFIX = ".json";
 
     @Override
     public boolean accept(File file, String string) {
         return string.endsWith(FILE_SUFFIX);
     }
 
-    protected static String buildFilename(String basePath, UUID uuid) {
+    public static String buildFilename(String basePath, UUID uuid) {
         StringBuilder b = new StringBuilder(basePath);
         b.append('/');
         b.append(uuid);
