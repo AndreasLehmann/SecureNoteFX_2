@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.andreaslehmann.securenotefx.business.boundary.remote;
 
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
@@ -23,12 +18,12 @@ import static org.junit.Assert.*;
  *
  * @author andreas
  */
-public class FileSystemStorageProviderTest {
+public class FileSystemStorageProviderIntegrationTest {
 
     FileSystemStorageProvider p = null;
     static Path tempDirectory = null;
 
-    public FileSystemStorageProviderTest() {
+    public FileSystemStorageProviderIntegrationTest() {
     }
 
     @BeforeClass
@@ -50,6 +45,7 @@ public class FileSystemStorageProviderTest {
         f.delete();
     }
 
+    //#######################################################################//
     /**
      * Test of getProviderName method, of class FileSystemStorageProvider.
      */
@@ -63,17 +59,17 @@ public class FileSystemStorageProviderTest {
     }
 
     /**
-     * Test of list method, of class FileSystemStorageProvider.
+     * This is not a test - it's for demo purpose only.
      */
     @Test
     public void testList() {
         System.out.println("list");
-        FileSystemStorageProvider instance = new FileSystemStorageProvider();
-        List<NoteEntity> expResult = null;
-        List<NoteEntity> result = instance.list();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        // Vorbereiten
+        p = new FileSystemStorageProvider();
+        p.setBaseDirectory(tempDirectory.toString());
+        // Aktivieren        
+        List<NoteEntity> result = p.list();
+        assertNotNull(result);
     }
 
     /**
@@ -82,13 +78,16 @@ public class FileSystemStorageProviderTest {
     @Test
     public void testRemoteWrite() {
         System.out.println("remoteWrite");
-        NoteEntity note = null;
-        FileSystemStorageProvider instance = new FileSystemStorageProvider();
-        boolean expResult = false;
-        boolean result = instance.remoteWrite(note);
+        // Vorbereiten
+        NoteEntity note = new NoteEntity("T", "B");
+        FileSystemStorageProvider p = new FileSystemStorageProvider();
+        p.setBaseDirectory(tempDirectory.toString());
+        boolean expResult = true;
+        // Aktivieren  
+        boolean result = p.remoteWrite(note);
+        // Prüfen
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
     }
 
     /**
@@ -153,7 +152,7 @@ public class FileSystemStorageProviderTest {
         // Aktivieren
         boolean result = p.init();
         // Prüfen
-        assertFalse(result);
+        assertTrue(result);
     }
 
 //***************************************************************************
@@ -257,6 +256,7 @@ public class FileSystemStorageProviderTest {
 
     /**
      * Test of getConfigFile method, of class FileSystemStorageProvider.
+     *
      * @throws java.io.IOException
      */
     @Test
@@ -277,8 +277,8 @@ public class FileSystemStorageProviderTest {
 
     /**
      * rekursives löschen von Verzeichnissen
-     * 
-     * @param f  das Verzeichnis
+     *
+     * @param f das Verzeichnis
      */
     static void deleteDir(File f) {
         for (File file : f.listFiles()) {
