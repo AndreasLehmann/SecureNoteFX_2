@@ -50,6 +50,8 @@ public class SecureNoteFXPresenter implements Initializable {
     @FXML
     private Button btnDelete;
     @FXML
+    private Button btnSync;
+    @FXML
     private SplitPane splitPane;
     @FXML
     private ToggleButton btnTrashcan;
@@ -64,6 +66,12 @@ public class SecureNoteFXPresenter implements Initializable {
     private void btnNewClicked(ActionEvent event) {
         log.debug("btnNewClicked");
         notesListPresenter.addNewNote();
+    }
+
+    @FXML
+    private void btnSyncClicked(ActionEvent event) {
+        log.debug("btnSyncClicked");
+        
     }
 
     @Override
@@ -91,10 +99,10 @@ public class SecureNoteFXPresenter implements Initializable {
         // "Löschen" und "Neu" Button nur aktivieren, wenn nicht in Papierkorb-Modus
         this.btnDelete.disableProperty().bind(this.btnTrashcan.selectedProperty());
         this.btnNew.disableProperty().bind(this.btnTrashcan.selectedProperty());
-        
+
         // Binde den "ShowDeleted" Button an das Property der NotizenListe
         this.notesListPresenter.showDeletedNotesProperty().bind(this.btnTrashcan.selectedProperty());
-        
+
     }
 
     public boolean shutdownAllowed() {

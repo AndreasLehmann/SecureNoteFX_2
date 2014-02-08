@@ -16,6 +16,8 @@
           <items>
             <Button fx:id="btnNew" mnemonicParsing="false" onAction="#btnNewClicked" text="Neu" />
             <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnDeleteClicked" text="Löschen" />
+            <Button fx:id="btnSync" mnemonicParsing="false" onAction="#btnSyncClicked" text="Sync" />
+            <Separator orientation="VERTICAL" prefHeight="-1.0" />
             <ToggleButton fx:id="btnTrashcan" mnemonicParsing="false" opacity="1.0" selected="false" text="Papierkorb" />
           </items>
         </ToolBar>
