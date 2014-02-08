@@ -8,7 +8,7 @@ import java.util.UUID;
  *
  * @author Andreas
  */
-class JSONNameHelper implements FilenameFilter {
+public class JSONNameHelper implements FilenameFilter {
 
     protected static final String FILE_SUFFIX = ".json";
 
