@@ -6,6 +6,7 @@
 package de.andreaslehmann.securenotefx.business.boundary;
 
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
+import de.andreaslehmann.securenotefx.utility.JsonNoteSerializer;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,12 +27,11 @@ import static org.junit.Assert.*;
 /**
  *
  * @author Andreas
- * @deprecated just for reference
  *
  */
-public class FilebasedNoteServiceTest {
+public class LocalFSNoteServiceTest {
 
-    FilebasedNoteService service = null;
+    LocalFSNoteService service = null;
     final String baseTestNoteRepository = "f:/tmp/MySecretNoteStorage_DEBUG/";
     private final String SPARE_TESTFILE_UUID = "10d2ec23-048c-4974-b7ed-f10d76ebc5a1";
     private final String MODIFY_TESTFILE_UUID = "025192d9-bcfb-49d2-81da-6c2e0d6f4d61";
@@ -39,8 +39,11 @@ public class FilebasedNoteServiceTest {
     private static final boolean SPARE2JSON = true;
     private static final boolean JSON2SPARE = false;
 
-    public FilebasedNoteServiceTest() {
-        service = new FilebasedNoteService(baseTestNoteRepository);
+    public LocalFSNoteServiceTest() {
+        service = new LocalFSNoteService(baseTestNoteRepository);
+        service.setSerializer(new JsonNoteSerializer());
+        
+        //TODO die init Methode testen!
 
     }
 
@@ -53,7 +56,7 @@ public class FilebasedNoteServiceTest {
     public void testList() {
         System.out.println("list");
         int expResult = 2;
-        ListProperty<NoteEntity> result = service.list();
+        List<NoteEntity> result = service.list();
         assertEquals(expResult, result.size());
     }
 
@@ -78,10 +81,10 @@ public class FilebasedNoteServiceTest {
 
         try {
 
-            boolean success = service.remoteWrite(n);
+            boolean success = service.writeNoteEntity(n);
             assertTrue(success); // schreiben erfolgreich ?
 
-            service.synchronize();
+            ///////service.synchronize();
             int numFilesAfter = service.list().size(); // der Test folgt später...
             assertEquals(numFilesBefore + 1, numFilesAfter); // eine Datei mehr? (Test wird erst hier ausgeführt, damit in jedem Fall gelöscht wird.)
 
@@ -130,20 +133,20 @@ public class FilebasedNoteServiceTest {
 
         // Lese original Liste ein
         List<NoteEntity> baseList;
-        List<NoteEntity> l1 = service.list().getValue();
+        List<NoteEntity> l1 = service.list();
         baseList = clone(l1); // clone die Liste und alle Elemente!
 
         // ##########################################
         /// Test 1 alles ist unverändert
-        service.synchronize(); // neu einlesen!
-        l1 = service.list().getValue();
+        ///////service.synchronize(); // neu einlesen!
+        l1 = service.list();
         assertEquals(l1.toString(), baseList.toString()); // sind die Listen nach dem erneuten Einlesen noch gleich?
 
         // ##########################################
         /// Test 2 neues NoteEntity hinzugekommen
         toggleSpareElement(SPARE2JSON);
-        service.synchronize(); // neu einlesen!
-        l1 = service.list().getValue();
+        //////service.synchronize(); // neu einlesen!
+        l1 = service.list();
         toggleSpareElement(JSON2SPARE);
         assertEquals(baseList.size() + 1, l1.size());
 
@@ -159,18 +162,18 @@ public class FilebasedNoteServiceTest {
 
         // Lese original Liste ein
         List<NoteEntity> baseList;
-        List<NoteEntity> l1 = service.list().getValue();
+        List<NoteEntity> l1 = service.list();
         baseList = clone(l1); // clone die Liste und alle Elemente!
 
         // ##########################################
         /// Test 3 ein NoteEntity wurde geändert
         try {
             modifyElement(); // Ändere eine Datei
-            l1 = service.list().getValue(); // neu einlesen!
+            l1 = service.list(); // neu einlesen!
             assertNotSame("Geändertes Element wurde nicht eingelesen!", baseList.toString(), l1.toString());
 
         } catch (IOException ex) {
-            Logger.getLogger(FilebasedNoteServiceTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LocalFSNoteServiceTest.class.getName()).log(Level.SEVERE, null, ex);
 
         } finally {
             restoreElement();
@@ -178,7 +181,7 @@ public class FilebasedNoteServiceTest {
     }
 
     @Test
-    public void testLastChangedUpdate() throws IOException {
+    public void testLastChangedUpdate() throws IOException, InterruptedException {
         System.out.println("LastChangedUpdate");
         try {
             modifyElement(); // Ändere eine Datei
@@ -186,43 +189,14 @@ public class FilebasedNoteServiceTest {
             NoteEntity e = service.readNoteEntity(UUID.fromString(MODIFY_TESTFILE_UUID));
             long beforeChange = e.getLastSavedOn();
             e.setTitle("modified Title");
-            service.remoteWrite(e);
+            Thread.sleep(1000);
+            service.writeNoteEntity(e);
             long afterChange = e.getLastSavedOn();
 
             assertTrue(afterChange > beforeChange);
 
         } catch (IOException ex) {
-            Logger.getLogger(FilebasedNoteServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-
-        } finally {
-            restoreElement(); // alles Rückgängig machen
-        }
-    }
-
-    @Test
-    public void testGetLastSync() throws IOException {
-        System.out.println("getLastSync");
-        ListProperty<NoteEntity> list = service.list(); // initialize 
-        long t0 = service.getLastSync();
-
-        try {
-            modifyElement(); // Ändere eine Datei
-
-            //list = service.list(); // re-read
-            service.synchronize();
-
-            long t1 = service.getLastSync();
-            assertTrue(t0 < t1);
-
-            NoteEntity e = list.get(0); // hole erstes Element
-            e.setTitle("modified Title"); // ändere es
-            service.remoteWrite(e); // schreibe es
-
-            long t2 = service.getLastSync();
-            assertTrue("Zeitstempel wurde nicht aktualisiert", t2 > t1);
-
-        } catch (IOException ex) {
-            Logger.getLogger(FilebasedNoteServiceTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LocalFSNoteServiceTest.class.getName()).log(Level.SEVERE, null, ex);
 
         } finally {
             restoreElement(); // alles Rückgängig machen
@@ -291,7 +265,7 @@ public class FilebasedNoteServiceTest {
         NoteEntity e = service.readNoteEntity(UUID.fromString(MODIFY_TESTFILE_UUID));
 
         e.setTitle("modified Title");
-        service.remoteWrite(e);
+        service.writeNoteEntity(e);
     }
 
     private void restoreElement() throws IOException {

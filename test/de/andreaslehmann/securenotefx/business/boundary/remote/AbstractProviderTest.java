@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.andreaslehmann.securenotefx.business.boundary;
+package de.andreaslehmann.securenotefx.business.boundary.remote;
 
+import de.andreaslehmann.securenotefx.business.boundary.remote.AbstractProvider;
 import de.andreaslehmann.securenotefx.business.entity.ChangeSet;
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import org.junit.Before;
  *
  * @author Andreas
  */
-public class AbstractNoteServiceTest {
+public class AbstractProviderTest {
 
     DummyTestClass abstractProxyClass = new DummyTestClass();
 
@@ -29,8 +30,11 @@ public class AbstractNoteServiceTest {
     @Before
     public void tearUp() {
         e1_1 = new NoteEntity();
+        e1_1.setLastSavedOn(12121212);
         e1_2 = new NoteEntity();
+        e1_2.setLastSavedOn(12121212);
         e1_3 = new NoteEntity();
+        e1_3.setLastSavedOn(12121212);
         tmp = null;
     }
 
@@ -898,10 +902,10 @@ public class AbstractNoteServiceTest {
      * This class is needed to test the abstract Base Class
      *
      */
-    class DummyTestClass extends AbstractNoteService {
+    class DummyTestClass extends AbstractProvider {
 
         @Override
-        boolean writeNoteEntity(NoteEntity newNote) {
+        public boolean remoteWrite(NoteEntity newNote) {
             tmp = newNote;
             return true;
         }

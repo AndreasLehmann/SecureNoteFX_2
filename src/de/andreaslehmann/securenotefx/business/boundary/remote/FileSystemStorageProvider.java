@@ -6,7 +6,7 @@
 package de.andreaslehmann.securenotefx.business.boundary.remote;
 
 import de.andreaslehmann.securenotefx.business.boundary.JSONNameHelper;
-import de.andreaslehmann.securenotefx.business.boundary.LocalFSNoteService;
+import de.andreaslehmann.securenotefx.business.entity.ChangeSet;
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
 import de.andreaslehmann.securenotefx.utility.JsonNoteSerializer;
 import java.io.BufferedReader;
@@ -17,8 +17,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.UUID;
 import javax.swing.Icon;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +30,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Andreas
  */
-public class FileSystemStorageProvider implements StorageProvider {
+public class FileSystemStorageProvider extends AbstractProvider implements StorageProvider {
 
     //TODO: Dieser Parameter muss dynamisch einstellbar sein.
     protected String baseDirectory = "c://Temp//remote-repo//";
@@ -105,7 +104,7 @@ public class FileSystemStorageProvider implements StorageProvider {
         List<NoteEntity> list = new ArrayList<>();
         List<String> directoryListing = readDir();
         for (String path : directoryListing) {
-            NoteEntity n = remoteRead(path);
+            NoteEntity n = remoteReadByPath(path);
             if (n != null) {
                 list.add(n);
             }
@@ -115,7 +114,12 @@ public class FileSystemStorageProvider implements StorageProvider {
 
     @Override
     public boolean remoteWrite(NoteEntity note) {
-        return this.remoteWrite(note, JSONNameHelper.buildFilename(baseDirectory, note.getUniqueKey()));
+        return this.remoteWriteToPath(note, JSONNameHelper.buildFilename(baseDirectory, note.getUniqueKey()));
+    }
+
+    @Override
+    public NoteEntity remoteRead(UUID id) {
+        return this.remoteReadByPath( JSONNameHelper.buildFilename(baseDirectory, id));
     }
 
     /**
@@ -164,7 +168,7 @@ public class FileSystemStorageProvider implements StorageProvider {
     }
 
     //######################################################################//
-    private NoteEntity remoteRead(String path) {
+    private NoteEntity remoteReadByPath(String path) {
         BufferedReader br = null;
         StringBuilder sb;
         sb = new StringBuilder();
@@ -202,11 +206,16 @@ public class FileSystemStorageProvider implements StorageProvider {
     }
 
     //######################################################################//
-        private boolean remoteWrite(NoteEntity n, String filepath) {
+    private boolean remoteWriteToPath(NoteEntity n, String filepath) {
 
         if (log.isDebugEnabled()) {
             log.debug("remote write: filepath=" + filepath);
         }
+        
+        // update timestamp
+        long previous = n.getLastSavedOn();
+        n.setLastSavedOn(System.currentTimeMillis());
+        
         String json = jsonService.serialize(n);
 
         File f = new File(filepath);
@@ -214,11 +223,14 @@ public class FileSystemStorageProvider implements StorageProvider {
         try {
             fos = new FileOutputStream(f);
             fos.write(json.getBytes());
+            n.setSyncronized();
         } catch (FileNotFoundException ex) {
             log.error("remote write error ", ex);
+            n.setLastSavedOn(previous);//restore last timestamp
             return false;
         } catch (IOException ex) {
             log.error("remote write error ", ex);
+            n.setLastSavedOn(previous);//restore last timestamp
             return false;
         } finally {
             try {
@@ -226,11 +238,27 @@ public class FileSystemStorageProvider implements StorageProvider {
                     fos.close();
                 }
             } catch (IOException ex) {
-            log.debug("remote write error ", ex);
+                log.debug("remote write error ", ex);
                 // hier kann man nichts mehr machen...
             }
         }
         return true;
+    }
+
+    @Override
+    public void syncronize(List<NoteEntity> localNotes) {
+        List<NoteEntity> remoteNotes = this.list();
+        List<ChangeSet> changes = super.compareRemote(remoteNotes, localNotes);
+
+        // keine Änderungen? dann austeigen
+        if (changes == null || changes.size() < 1) {
+            return;
+        }
+        
+        // Listen zusammenführen
+        // TODO: Was passiert, wenn eine Notiz remote verändert wurde,
+        // die gerade vom Anwender bearbeitet wird?
+        super.applyChanges(changes, localNotes); 
     }
 
 }

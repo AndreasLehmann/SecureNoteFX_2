@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.andreaslehmann.securenotefx.business.boundary;
+package de.andreaslehmann.securenotefx.business.boundary.remote;
 
 import de.andreaslehmann.securenotefx.business.entity.ChangeSet;
 import static de.andreaslehmann.securenotefx.business.entity.ChangeSet.ChangeTyp.BOTH_UPDATED;
@@ -21,11 +21,14 @@ import java.util.List;
  *
  * @author Andreas
  */
-public abstract class AbstractNoteService {
+public abstract class AbstractProvider {
 
     /**
      * Vergleicht die beiden Eingabelisten und gibt alle Änderungen zwischen den
      * beiden Listen als ChangeSet zuürck.
+     *
+     * Diese Methode arbeitet mit der isDirty-Methode, die neuere Version sollte
+     * mit isSynchronized arbeiten.
      *
      * @see ChangeSet
      *
@@ -33,6 +36,7 @@ public abstract class AbstractNoteService {
      * @param localList Liste der Objekte im Speicher
      * @return Liste der Änderungen oder null, wenn eine der Eingabelisten null
      * ist.
+     *
      */
     protected List<ChangeSet> compare(List<NoteEntity> remoteList, List<NoteEntity> localList) {
 
@@ -117,6 +121,50 @@ public abstract class AbstractNoteService {
     }
 
     /**
+     * Vergleicht die beiden Eingabelisten und gibt alle Änderungen zwischen den
+     * beiden Listen als ChangeSet zuürck.
+     *
+     * @see ChangeSet
+     *
+     * @param remoteList Liste der entfernt gespeicherten Objekte
+     * @param localList Liste der Objekte im Speicher
+     * @return Liste der Änderungen oder null, wenn eine der Eingabelisten null
+     * ist.
+     */
+    protected List<ChangeSet> compareRemote(List<NoteEntity> remoteList, List<NoteEntity> localList) {
+        if (remoteList == null || localList == null) {
+            return null;
+        }
+
+        List<ChangeSet> changes = new ArrayList<>();
+
+        // Suche Notizen, welche lokal, aber nicht remote vorhanden sind (LOCAL_ADDED)
+        // oder lokal neuer sind (LOCAL_UPDATED) bzw. remote neuer sind (REMOTE_UPDATED)
+        for (NoteEntity localNote : localList) {
+            boolean found = false;
+            for (NoteEntity remoteNote : remoteList) {
+                if (remoteNote.getUniqueKey().equals(localNote.getUniqueKey())) {
+                    found = true; // Notiz ist remote bereits vorhanden
+
+                    if (localNote.getLastSavedOn() == remoteNote.getLastSavedOn()) { // beide haben den gleich Zeitstempel?
+                        localNote.setSyncronized();
+                    } else if (localNote.getLastSavedOn() > remoteNote.getLastSavedOn()) { // Ist die lokale neuer?
+                        changes.add(new ChangeSet(ChangeSet.ChangeTyp.LOCAL_UPDATED, remoteNote, localNote));
+                    } else { // remote zeit ist neuer
+                        changes.add(new ChangeSet(ChangeSet.ChangeTyp.REMOTE_UPDATED, localNote, remoteNote));
+                    }
+                    break;
+                }
+            }
+            if (!found) {
+                changes.add(new ChangeSet(ChangeSet.ChangeTyp.LOCAL_ADDED, null, localNote));
+            }
+        }
+
+        return changes;
+    }
+
+    /**
      * Führt die Änderungen zusammen.
      *
      * @param changes
@@ -128,13 +176,13 @@ public abstract class AbstractNoteService {
         for (ChangeSet change : changes) {
             switch (change.changeType) {
                 case LOCAL_ADDED:
-                    writeNoteEntity(change.newNote);
+                    remoteWrite(change.newNote);
                     break;
                 case LOCAL_UPDATED:
-                    writeNoteEntity(change.newNote);
+                    remoteWrite(change.newNote);
                     break;
                 case LOCAL_DELETED:
-                    writeNoteEntity(change.newNote);
+                    remoteWrite(change.newNote);
                     break;
                 case REMOTE_ADDED:
                     activeNoteList.add(change.newNote);
@@ -160,7 +208,7 @@ public abstract class AbstractNoteService {
                             if (idx >= 0) {
                                 activeNoteList.set(idx, change.newNote);
                             } else {
-                                writeNoteEntity(change.newNote);
+                                remoteWrite(change.newNote);
                             }
                         } else {
                             idx = activeNoteList.indexOf(change.oldNote);
@@ -168,12 +216,12 @@ public abstract class AbstractNoteService {
                         }
                     } else {
                         if (change.newNote.isDeleted()) {
-                            writeNoteEntity(change.oldNote);
+                            remoteWrite(change.oldNote);
                         } else {
                             NoteEntity merged = merge(change);
                             idx = activeNoteList.indexOf(change.oldNote);
                             activeNoteList.set(idx, merged);
-                            writeNoteEntity(merged);
+                            remoteWrite(merged);
                         }
 
                     }
@@ -186,7 +234,7 @@ public abstract class AbstractNoteService {
 
     }
 
-    abstract boolean writeNoteEntity(NoteEntity newNote);
+    public abstract boolean remoteWrite(NoteEntity newNote);
 
     private NoteEntity merge(ChangeSet change) {
 

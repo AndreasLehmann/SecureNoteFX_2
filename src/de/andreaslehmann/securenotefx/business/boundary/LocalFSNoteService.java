@@ -5,6 +5,11 @@
  */
 package de.andreaslehmann.securenotefx.business.boundary;
 
+import de.andreaslehmann.securenotefx.business.boundary.remote.AbstractProvider;
+import de.andreaslehmann.securenotefx.business.boundary.remote.FileSystemStorageProvider;
+import de.andreaslehmann.securenotefx.business.boundary.remote.StorageContext;
+import de.andreaslehmann.securenotefx.business.boundary.remote.StorageProvider;
+import de.andreaslehmann.securenotefx.business.entity.ChangeSet;
 import de.andreaslehmann.securenotefx.utility.JsonNoteSerializer;
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
 import de.andreaslehmann.securenotefx.utility.PrefStore;
@@ -32,16 +37,20 @@ import org.slf4j.LoggerFactory;
  * @author Andreas
  *
  */
-public class LocalFSNoteService extends AbstractNoteService {
+public class LocalFSNoteService {
 
     @Inject
     private JsonNoteSerializer jsonService;
+
+    /**
+     * Hält die Konfiguration zum Remote Storage Provider
+     */
+    private StorageContext storageCtx = null;
 
     private final org.slf4j.Logger log = LoggerFactory.getLogger(getClass());
     public String basePath = null;
     private final JSONNameHelper jsonFilenameFilter = new JSONNameHelper();
 
-    //ListProperty<NoteEntity> noteListProperty = new SimpleListProperty<>(javafx.collections.FXCollections.observableList(new ArrayList<NoteEntity>()));
     public LocalFSNoteService() {
         super();
         this.basePath = PrefStore.instance().get(PrefStore.LOCAL_BASE_PATH, null);
@@ -49,11 +58,18 @@ public class LocalFSNoteService extends AbstractNoteService {
             log.error("No basepath set !");
         }
     }
+    public LocalFSNoteService(String basepath) {
+        super();
+        this.basePath = basepath;
+        if (this.basePath == null) {
+            log.error("No basepath set !");
+        }
+    }
 
     /**
-     * Prüfe ob der BasePath gesetzt ist und erzeug das Verzeichnis,
-     * falls nicht bereits vorhanden.
-     * 
+     * Prüfe ob der BasePath gesetzt ist und erzeug das Verzeichnis, falls nicht
+     * bereits vorhanden.
+     *
      * @return true, wenn alles bereit ist.
      */
     public boolean init() {
@@ -65,6 +81,9 @@ public class LocalFSNoteService extends AbstractNoteService {
         if (!f.exists()) {
             f.mkdirs();
         }
+
+        this.setupRemoteStorageProvider();
+
         return true;
     }
 
@@ -137,12 +156,14 @@ public class LocalFSNoteService extends AbstractNoteService {
             log.debug("read json string=" + sb.toString());
         }
 
+        String x = sb.toString();
+        
         n = jsonService.deserialize(sb.toString());
+        n.setLastSavedOn(n.getLastSavedOn()); // set dirty Flag == false!
 
         return n;
     }
 
-    @Override
     public boolean writeNoteEntity(NoteEntity n) {
         return writeNoteEntity(n, JSONNameHelper.buildFilename(basePath, n.getUniqueKey()));
     }
@@ -199,4 +220,32 @@ public class LocalFSNoteService extends AbstractNoteService {
         n.undelete();
         this.writeNoteEntity(n);
     }
+
+    private void setupRemoteStorageProvider() {
+        storageCtx = new StorageContext();
+        storageCtx.setProvider(new FileSystemStorageProvider());
+
+    }
+
+    /**
+     * Die Methode synchronisiert die Notizen mit dem RemoteStorageProvider.
+     * ACHTUNG: Die übergebene Liste wird auch verändert!
+     *
+     * @param localNotes die Notizenliste, die derzeit im Baum dargestellt wird
+     */
+    public void remoteSyncNote(List<NoteEntity> localNotes) {
+
+        StorageProvider p = this.storageCtx.getProvider();
+        p.syncronize(localNotes);
+        
+    }
+
+    /**
+     * Fallback falls die @Inject methode versagt (z.B. beim Junittest)
+     * @param jsonService 
+     */
+    protected void setSerializer( JsonNoteSerializer jsonService){
+        this.jsonService = jsonService;
+    }
+
 }

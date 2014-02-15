@@ -5,6 +5,7 @@
  */
 package de.andreaslehmann.securenotefx.business.boundary;
 
+import de.andreaslehmann.securenotefx.business.boundary.remote.AbstractProvider;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -41,7 +42,7 @@ import javafx.beans.property.SimpleStringProperty;
  * @deprecated just for reference
  *
  */
-public class FilebasedNoteService extends AbstractNoteService {
+public class FilebasedNoteService extends AbstractProvider {
 
     protected static final String FILE_SUFFIX = ".json";
     public final String basePath;
@@ -126,7 +127,7 @@ public class FilebasedNoteService extends AbstractNoteService {
     }
 
     @Override
-    public boolean writeNoteEntity(NoteEntity n) {
+    public boolean remoteWrite(NoteEntity n) {
         return writeNoteEntity(n, buildFilename(n.getUniqueKey()));
     }
 
@@ -178,7 +179,7 @@ public class FilebasedNoteService extends AbstractNoteService {
 
     public void delete(NoteEntity e) {
         e.delete();
-        this.writeNoteEntity(e);
+        this.remoteWrite(e);
 
     }
 

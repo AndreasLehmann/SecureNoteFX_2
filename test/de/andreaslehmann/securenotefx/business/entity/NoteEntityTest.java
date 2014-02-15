@@ -241,7 +241,7 @@ public class NoteEntityTest {
         NoteEntity n;
 
         n = new NoteEntity();
-        assertEquals(false, n.isDirty());
+        assertEquals(true, n.isDirty());
     }
 
     @Test
@@ -250,7 +250,7 @@ public class NoteEntityTest {
         NoteEntity n;
 
         n = new NoteEntity("A", "B");
-        assertEquals(false, n.isDirty());
+        assertEquals(true, n.isDirty());
     }
 
     @Test
@@ -269,7 +269,7 @@ public class NoteEntityTest {
         n = new NoteEntity("A", "B");
         // TEST
         n.setTitle("A"); // Title is already "A"
-        assertEquals(false, n.isDirty());
+        assertEquals(true, n.isDirty());
     }
 
     @Test
@@ -297,8 +297,8 @@ public class NoteEntityTest {
         NoteEntity n;
         n = new NoteEntity("A", "B");
         // TEST
-        n.titleProperty().setValue("A");
-        assertEquals(false, n.isDirty());
+        n.titleProperty().setValue("A"); // title a already 'A'
+        assertEquals(true, n.isDirty());
     }
 
     @Test
@@ -317,7 +317,7 @@ public class NoteEntityTest {
         n = new NoteEntity("A", "B");
         // TEST
         n.setBody("B");
-        assertEquals(false, n.isDirty());
+        assertEquals(true, n.isDirty());
     }
 
     @Test
@@ -346,7 +346,7 @@ public class NoteEntityTest {
         n = new NoteEntity("A", "B");
         // TEST
         n.bodyProperty().setValue("B");
-        assertEquals(false, n.isDirty());
+        assertEquals(true, n.isDirty());
     }
 
     @Test
@@ -379,7 +379,7 @@ public class NoteEntityTest {
         bodyproperty.bindBidirectional(n.bodyProperty());
         // TEST
         n.bodyProperty().setValue("B");
-        assertEquals(false, n.isDirty());
+        assertEquals(true, n.isDirty());
     }
     
     @Test
@@ -418,7 +418,7 @@ public class NoteEntityTest {
         // TEST
         bodyproperty.setValue("B");
         
-        assertEquals(false, n.isDirty());
+        assertEquals(true, n.isDirty());
     }
     
     @Test
@@ -426,7 +426,7 @@ public class NoteEntityTest {
         System.out.println("SyncronizedFlag_AfterTitle1");
         NoteEntity n;
         n = new NoteEntity("A", "B");
-        assertEquals(true, n.isSyncronized());
+        assertEquals(false, n.isSyncronized());
         // TEST
         n.setTitle("C");
         assertEquals(false, n.isSyncronized());
@@ -437,7 +437,7 @@ public class NoteEntityTest {
         System.out.println("SyncronizedFlag_AfterBody");
         NoteEntity n;
         n = new NoteEntity("A", "B");
-        assertEquals(true, n.isSyncronized());
+        assertEquals(false, n.isSyncronized());
         // TEST
         n.setBody("C");
         assertEquals(false, n.isSyncronized());
@@ -447,7 +447,7 @@ public class NoteEntityTest {
         System.out.println("SyncronizedFlag_AfterDirty");
         NoteEntity n;
         n = new NoteEntity("A", "B");
-        assertEquals(true, n.isSyncronized());
+        assertEquals(false, n.isSyncronized());
         // TEST
         n.setDirty();
         assertEquals(false, n.isSyncronized());
@@ -458,10 +458,10 @@ public class NoteEntityTest {
         System.out.println("SyncronizedFlag_AfterSave1");
         NoteEntity n;
         n = new NoteEntity("A", "B");
-        assertEquals(true, n.isSyncronized());
+        assertEquals(false, n.isSyncronized());
         // TEST
         n.setLastSavedOn(10000L);
-        assertEquals(true, n.isSyncronized());
+        assertEquals(false, n.isSyncronized());
     }
     @Test
     public void testSyncronizedFlag_AfterSave2() {

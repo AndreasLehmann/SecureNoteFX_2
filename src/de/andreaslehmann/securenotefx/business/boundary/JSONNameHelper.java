@@ -18,9 +18,12 @@ public class JSONNameHelper implements FilenameFilter {
     }
 
     public static String buildFilename(String basePath, UUID uuid) {
+        return buildFilename(basePath, uuid.toString());
+    }
+    public static String buildFilename(String basePath, String id) {
         StringBuilder b = new StringBuilder(basePath);
         b.append('/');
-        b.append(uuid);
+        b.append(id);
         b.append(JSONNameHelper.FILE_SUFFIX);
         return b.toString();
     }

@@ -16,20 +16,30 @@ import javafx.scene.image.Image;
 public class DirtyImageBinding extends ObjectBinding<Image> {
 
     NoteEntity note;
-    Image image;
+    static final Image image00 = new Image("status00.png");
+    static final Image image10 = new Image("status10.png");
+    static final Image image01 = new Image("status01.png");
+    static final Image image11 = new Image("status11.png");
 
-    public DirtyImageBinding(NoteEntity note, Image image) {
+    public DirtyImageBinding(NoteEntity note) {
         super();
         this.note = note;
-        this.image = image;
     }
 
     @Override
     protected Image computeValue() {
-        if (!note.isSyncronizedProperty().get()) {
-            return image;
-        } else {
-            return null;
-        }
+        if (!note.isDirtyProperty().get() && note.isSyncronizedProperty().get()) { 
+            return image00;
+        } 
+        if (note.isDirtyProperty().get() && note.isSyncronizedProperty().get()) { 
+            return image10;
+        } 
+        if (!note.isDirtyProperty().get() && !note.isSyncronizedProperty().get()) { 
+            return image01;
+        } 
+        if (note.isDirtyProperty().get() && !note.isSyncronizedProperty().get()) { 
+            return image11;
+        } 
+        return null;
     }
 }

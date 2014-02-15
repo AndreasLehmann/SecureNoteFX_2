@@ -66,8 +66,8 @@ public class NoteEntity implements Serializable {
         this.createdOn = System.currentTimeMillis();
         this.body.addListener(dirtyListener);
         this.title.addListener(dirtyListener);
-        this.dirty = new SimpleBooleanProperty(false);
-        this.syncronized = new SimpleBooleanProperty(true);
+        this.dirty = new SimpleBooleanProperty(true);
+        this.syncronized = new SimpleBooleanProperty(false);
     }
 
     public NoteEntity(String title, String body) {
@@ -78,8 +78,8 @@ public class NoteEntity implements Serializable {
         this.createdOn = System.currentTimeMillis();
         this.body.addListener(dirtyListener);
         this.title.addListener(dirtyListener);
-        this.dirty = new SimpleBooleanProperty(false);
-        this.syncronized = new SimpleBooleanProperty(true);
+        this.dirty = new SimpleBooleanProperty(true);
+        this.syncronized = new SimpleBooleanProperty(false);
     }
 
     public String getTitle() {
@@ -230,7 +230,7 @@ public class NoteEntity implements Serializable {
         return this.syncronized.getValue();
     }
 
-    void setSyncronized() {
+    public void setSyncronized() {
         this.syncronized.setValue(true);
     }
 

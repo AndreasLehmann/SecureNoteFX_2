@@ -206,4 +206,7 @@ public class NotesListPresenter implements Initializable {
         }
     }
 
+    public void remoteSyncNotes() {
+                service.remoteSyncNote(this.notes);
+    }
 }

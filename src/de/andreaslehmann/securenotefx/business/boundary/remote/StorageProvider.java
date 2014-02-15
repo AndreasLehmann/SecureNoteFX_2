@@ -7,6 +7,7 @@ package de.andreaslehmann.securenotefx.business.boundary.remote;
 
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
 import java.util.List;
+import java.util.UUID;
 import javax.swing.Icon;
 
 /**
@@ -67,4 +68,20 @@ public interface StorageProvider {
      * @return true, wenn die Operation geklappt hat
      */
     boolean remoteWrite(NoteEntity note);
+
+    /**
+     * Liest eine Notiz.
+     *
+     * @param id der eindeutige Identifier der Notiz
+     * @return die Notiz oder null, wenn diese nicht gefunden wurde
+     */
+    NoteEntity remoteRead(UUID id);
+    
+    /**
+     * Gleicht die lokaleListe mit den remote Notizen ab. Dabei wird 
+     * auch die lokale Lister verändert!
+     * 
+     * @param localNotes Liste gegen die vergleichen wird.
+     */
+    void syncronize (List<NoteEntity> localNotes);
 }

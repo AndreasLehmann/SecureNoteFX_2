@@ -71,7 +71,7 @@ public class SecureNoteFXPresenter implements Initializable {
     @FXML
     private void btnSyncClicked(ActionEvent event) {
         log.debug("btnSyncClicked");
-        
+        notesListPresenter.remoteSyncNotes();
     }
 
     @Override

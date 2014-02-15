@@ -28,7 +28,6 @@ public class NoteListCell extends ListCell<NoteEntity> {
     HBox hbox;
     Label label = new Label("(Leer)");
     Pane pane = new Pane();
-    Image image = new Image("sync.png");
 
     ImageView imageView = new ImageView();
 
@@ -56,14 +55,23 @@ public class NoteListCell extends ListCell<NoteEntity> {
             // Tooltip setzen
             label.setTooltip(new Tooltip(getTooltip(note)));
             // Icon binden
-            final DirtyImageBinding dib = new DirtyImageBinding(note, image);
-            // DirtyImageBinding aktualisieren, falls isDirty sich ändert.
+            final DirtyImageBinding dib = new DirtyImageBinding(note);
+            
+            // DirtyImageBinding aktualisieren, falls isSychonized sich ändert.
             note.isSyncronizedProperty().addListener(new InvalidationListener() {
                 @Override
                 public void invalidated(Observable o) {
                     dib.invalidate();
                 }
             });
+            // DirtyImageBinding aktualisieren, falls isDirty sich ändert.
+            note.isDirtyProperty().addListener(new InvalidationListener() {
+                @Override
+                public void invalidated(Observable o) {
+                    dib.invalidate();
+                }
+            });
+
             // PropertyListener binden
             imageView.imageProperty().bind(dib);
             // Grafik setzen

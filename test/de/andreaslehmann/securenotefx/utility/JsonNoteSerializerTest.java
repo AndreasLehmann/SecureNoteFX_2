@@ -51,7 +51,7 @@ public class JsonNoteSerializerTest {
         assertEquals("26c1701e-0d3f-4c05-8cf7-1e460d41ebc9", n.getUniqueKey().toString());
         assertEquals("A", n.getTitle());
         assertEquals("B", n.getBody());
-        assertFalse(n.isDirty());
+        assertTrue(n.isDirty());
         assertFalse(n.isDeleted());
 
     }
