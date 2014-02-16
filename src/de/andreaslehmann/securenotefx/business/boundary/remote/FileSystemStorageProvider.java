@@ -218,6 +218,7 @@ public class FileSystemStorageProvider extends AbstractProvider implements Stora
         long lastRemoteTS_bak = n.getRemoteTimestamp();
         n.setLastSavedOn(now);
         n.setRemoteTimestamp(now);
+        n.setSyncronized();
         
         String json = jsonService.serialize(n);
 
@@ -226,7 +227,6 @@ public class FileSystemStorageProvider extends AbstractProvider implements Stora
         try {
             fos = new FileOutputStream(f);
             fos.write(json.getBytes());
-            n.setSyncronized();
         } catch (FileNotFoundException ex) {
             log.error("remote write error ", ex);
             n.setLastSavedOn(lastSavedTS_bak);//restore last timestamp
@@ -251,19 +251,22 @@ public class FileSystemStorageProvider extends AbstractProvider implements Stora
     }
 
     @Override
-    public void syncronize(List<NoteEntity> localNotes) {
+    public List<ChangeSet> syncronize(List<NoteEntity> localNotes) {
         List<NoteEntity> remoteNotes = this.list();
         List<ChangeSet> changes = super.compareRemote(remoteNotes, localNotes);
 
         // keine Änderungen? dann austeigen
         if (changes == null || changes.size() < 1) {
-            return;
+            return  new ArrayList<ChangeSet>();
         }
         
         // Listen zusammenführen
         // TODO: Was passiert, wenn eine Notiz remote verändert wurde,
         // die gerade vom Anwender bearbeitet wird?
         super.applyChanges(changes, localNotes); 
+        
+        return changes;
+        
     }
 
 }

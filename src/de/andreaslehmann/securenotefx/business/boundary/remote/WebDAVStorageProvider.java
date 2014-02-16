@@ -8,6 +8,7 @@ package de.andreaslehmann.securenotefx.business.boundary.remote;
 import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
 import com.github.sardine.SardineFactory;
+import de.andreaslehmann.securenotefx.business.entity.ChangeSet;
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
 import java.io.IOException;
 import java.util.List;
@@ -83,7 +84,7 @@ public class WebDAVStorageProvider implements StorageProvider {
     }
 
     @Override
-    public void syncronize(List<NoteEntity> localNotes) {
+    public List<ChangeSet> syncronize(List<NoteEntity> localNotes) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

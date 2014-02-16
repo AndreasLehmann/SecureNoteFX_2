@@ -5,6 +5,7 @@
  */
 package de.andreaslehmann.securenotefx.business.boundary.remote;
 
+import de.andreaslehmann.securenotefx.business.entity.ChangeSet;
 import de.andreaslehmann.securenotefx.business.entity.NoteEntity;
 import java.util.List;
 import java.util.UUID;
@@ -82,6 +83,7 @@ public interface StorageProvider {
      * auch die lokale Lister verändert!
      * 
      * @param localNotes Liste gegen die vergleichen wird.
+     * @return die Liste der Änderungen, die durchgeführt wurden
      */
-    void syncronize (List<NoteEntity> localNotes);
+    List<ChangeSet> syncronize (List<NoteEntity> localNotes);
 }

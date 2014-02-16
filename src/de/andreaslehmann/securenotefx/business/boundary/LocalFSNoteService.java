@@ -157,7 +157,7 @@ public class LocalFSNoteService {
         }
 
         String x = sb.toString();
-        
+
         n = jsonService.deserialize(sb.toString());
         n.setLastSavedOn(n.getLastSavedOn()); // set dirty Flag == false!
 
@@ -165,30 +165,17 @@ public class LocalFSNoteService {
     }
 
     public boolean writeNoteEntity(NoteEntity n) {
-        return writeNoteEntity(n, JSONNameHelper.buildFilename(basePath, n.getUniqueKey()));
-    }
-
-    private boolean writeNoteEntity(NoteEntity n, String filepath) {
 
         if (!n.isDirty()) {
             return true;
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("write: filepath=" + filepath);
         }
 
         // update timestamp
         long previous = n.getLastSavedOn();
         n.setLastSavedOn(System.currentTimeMillis());
 
-        String json = jsonService.serialize(n);
-
-        File f = new File(filepath);
-        FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(f);
-            fos.write(json.getBytes());
+            this.rawWriteNoteEntity(n);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(LocalFSNoteService.class.getName()).log(Level.SEVERE, null, ex);
             n.setLastSavedOn(previous);//restore last timestamp
@@ -197,6 +184,31 @@ public class LocalFSNoteService {
             Logger.getLogger(LocalFSNoteService.class.getName()).log(Level.SEVERE, null, ex);
             n.setLastSavedOn(previous);//restore last timestamp
             return false;
+        }
+        return true;
+    }
+
+    /**
+     * Das reine schreiben auf DISK ohne Sicherheitsnetz und Businesslogik.
+     * Speziell der LastSavedOn - Timestamp wird nicht angefasst.
+     *
+     * @param newNote
+     */
+    private void rawWriteNoteEntity(NoteEntity n) throws FileNotFoundException, IOException {
+        String filepath = JSONNameHelper.buildFilename(basePath, n.getUniqueKey());
+
+        if (log.isDebugEnabled()) {
+            log.debug("write: filepath=" + filepath);
+        }
+
+        String json = jsonService.serialize(n);
+
+        File f = new File(filepath);
+        FileOutputStream fos = null;
+
+        try {
+            fos = new FileOutputStream(f);
+            fos.write(json.getBytes());
         } finally {
             try {
                 if (fos != null) {
@@ -207,8 +219,6 @@ public class LocalFSNoteService {
                 // hier kann man nichts mehr machen...
             }
         }
-
-        return true;
     }
 
     public void delete(NoteEntity n) {
@@ -236,15 +246,25 @@ public class LocalFSNoteService {
     public void remoteSyncNote(List<NoteEntity> localNotes) {
 
         StorageProvider p = this.storageCtx.getProvider();
-        p.syncronize(localNotes);
-        
+        List<ChangeSet> changes = p.syncronize(localNotes);
+
+        for (ChangeSet c : changes) {
+            try {
+                this.rawWriteNoteEntity(c.newNote);
+                c.newNote.setLastSavedOn(c.newNote.getLastSavedOn()); // reset Dirty-Flag
+            } catch (IOException ex) {
+                log.error("Can't write back changes after remote sync.", ex);
+            }
+        }
+
     }
 
     /**
      * Fallback falls die @Inject methode versagt (z.B. beim Junittest)
-     * @param jsonService 
+     *
+     * @param jsonService
      */
-    protected void setSerializer( JsonNoteSerializer jsonService){
+    protected void setSerializer(JsonNoteSerializer jsonService) {
         this.jsonService = jsonService;
     }
 
