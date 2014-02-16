@@ -36,10 +36,16 @@ public class NoteEntity implements Serializable {
      * timestamp when this note was created
      */
     private long createdOn = 0L;
+
     /**
      * timestamp when this note was last saved to disk
      */
     private long lastSavedOn = 0L;
+    
+    /**
+     * timestamp when this note was saved on a remote location
+     */
+    private long remoteTimestamp = 0L;
     
     /**
      * timestamp when this note was deleted
@@ -141,6 +147,14 @@ public class NoteEntity implements Serializable {
         return lastSavedOn;
     }
 
+    public long getRemoteTimestamp() {
+        return remoteTimestamp;
+    }
+
+    public void setRemoteTimestamp(long remoteTimestamp) {
+        this.remoteTimestamp = remoteTimestamp;
+    }
+    
     public long getDeletedOn() {
         return deletedOn;
     }
