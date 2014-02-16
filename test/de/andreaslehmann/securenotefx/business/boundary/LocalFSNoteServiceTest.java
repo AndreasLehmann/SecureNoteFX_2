@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.ListProperty;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -42,9 +41,8 @@ public class LocalFSNoteServiceTest {
     public LocalFSNoteServiceTest() {
         service = new LocalFSNoteService(baseTestNoteRepository);
         service.setSerializer(new JsonNoteSerializer());
-        
-        //TODO die init Methode testen!
 
+        //TODO die init Methode testen!
     }
 
     /**
@@ -105,6 +103,50 @@ public class LocalFSNoteServiceTest {
             }
         }
 
+    }
+
+    /**
+     * Diser Test testet einen typischen Arbeitsablauf: - Datei laden - Datei
+     * ändern - Datei lokal wieder speichern
+     *
+     */
+    @Test
+    public void testWorkCyle() throws IOException, InterruptedException {
+        System.out.println("testWorkCycle");
+        final String testTitle = "Test-Titel";
+        final String testBody = "Test-Body { [ : \\ ÄÖÜ \" ";
+
+        NoteEntity n = new NoteEntity(testTitle, testBody);
+
+        String newFilename = baseTestNoteRepository + n.getUniqueKey() + ".json"; // erzeuge Dateinamen zum Löschen!
+        File f = new File(newFilename); // erzeuge Dateihandle;
+
+        try {
+            // schreiben
+            service.writeNoteEntity(n);
+            // neu einlesen
+            n = service.readNoteEntity(n.getUniqueKey());
+            long oldTimestamp = n.getLastSavedOn();
+            assertFalse(n.isDirty());
+            Thread.sleep(500);
+            // verändere Notiz
+            n.setTitle("Neuer Titel");
+            assertTrue(n.isDirty());
+            // schreiben
+            service.writeNoteEntity(n);
+            assertFalse(n.isDirty());
+            long newTimestamp = n.getLastSavedOn();
+
+            assertTrue(oldTimestamp < newTimestamp);
+
+            boolean success = f.delete();
+            assertTrue(success); // löschen hat geklappt?
+            f = null;
+        } finally {
+            if (f != null) {
+                f.delete(); // Lösche Datei !
+            }
+        }
     }
 
     @Test
