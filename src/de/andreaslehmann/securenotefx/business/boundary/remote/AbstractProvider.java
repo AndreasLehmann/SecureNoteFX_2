@@ -146,18 +146,46 @@ public abstract class AbstractProvider {
                 if (remoteNote.getUniqueKey().equals(localNote.getUniqueKey())) {
                     found = true; // Notiz ist remote bereits vorhanden
 
-                    if (localNote.getLastSavedOn() == remoteNote.getLastSavedOn()) { // beide haben den gleich Zeitstempel?
+                    if (localNote.getLastSavedOn() == remoteNote.getRemoteTimestamp()) { // beide haben den gleichen remote Zeitstempel?
                         localNote.setSyncronized();
-                    } else if (localNote.getLastSavedOn() > remoteNote.getLastSavedOn()) { // Ist die lokale neuer?
-                        changes.add(new ChangeSet(ChangeSet.ChangeTyp.LOCAL_UPDATED, remoteNote, localNote));
+                    } else if (localNote.getLastSavedOn() > remoteNote.getRemoteTimestamp()) { // Ist die lokale neuer?
+                        // Ja, die lokale ist neuer.
+                        // Pürfe, ob remote mittlerweile verändert wurde
+                        if (localNote.getRemoteTimestamp() == remoteNote.getRemoteTimestamp()) {
+                            // Remote hat sich nichts verändert, kann überschrieben werden
+                            changes.add(new ChangeSet(ChangeSet.ChangeTyp.LOCAL_UPDATED, remoteNote, localNote));
+                        } else {
+                            // Remote wurde auch bereits verändert, also gab es einen Konflikt
+                            changes.add(new ChangeSet(ChangeSet.ChangeTyp.BOTH_UPDATED, remoteNote, localNote));
+                        }
                     } else { // remote zeit ist neuer
-                        changes.add(new ChangeSet(ChangeSet.ChangeTyp.REMOTE_UPDATED, localNote, remoteNote));
+                        // Ok, wurde lokal etwas verändert?
+                        if (localNote.getLastSavedOn() == localNote.getRemoteTimestamp() && !localNote.isDirty()) {
+                            // Lokal wurde nichts verändert - lokale Datei überschreiben!
+                            changes.add(new ChangeSet(ChangeSet.ChangeTyp.REMOTE_UPDATED, localNote, remoteNote));
+                        } else {
+                            changes.add(new ChangeSet(ChangeSet.ChangeTyp.BOTH_UPDATED, localNote, remoteNote));
+                        }
                     }
                     break;
                 }
             }
             if (!found) {
                 changes.add(new ChangeSet(ChangeSet.ChangeTyp.LOCAL_ADDED, null, localNote));
+            }
+        }
+
+        // Suche jetzt in der Remote-Liste nach Notizen, die lokal nicht vorhanden sind.
+        for (NoteEntity remoteNote : remoteList) {
+            boolean found = false;
+            for (NoteEntity localNote : localList) {
+                if (remoteNote.getUniqueKey().equals(localNote.getUniqueKey())) {
+                    found = true; // Notiz ist remote bereits vorhanden
+                    break;
+                }
+            }
+            if (!found) {
+                changes.add(new ChangeSet(ChangeSet.ChangeTyp.REMOTE_ADDED, null, remoteNote));
             }
         }
 
