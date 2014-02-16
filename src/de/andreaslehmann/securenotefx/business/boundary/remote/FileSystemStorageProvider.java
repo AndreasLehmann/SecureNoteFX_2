@@ -213,8 +213,11 @@ public class FileSystemStorageProvider extends AbstractProvider implements Stora
         }
         
         // update timestamp
-        long previous = n.getLastSavedOn();
-        n.setLastSavedOn(System.currentTimeMillis());
+        long now=System.currentTimeMillis();
+        long lastSavedTS_bak = n.getLastSavedOn();
+        long lastRemoteTS_bak = n.getRemoteTimestamp();
+        n.setLastSavedOn(now);
+        n.setRemoteTimestamp(now);
         
         String json = jsonService.serialize(n);
 
@@ -226,11 +229,13 @@ public class FileSystemStorageProvider extends AbstractProvider implements Stora
             n.setSyncronized();
         } catch (FileNotFoundException ex) {
             log.error("remote write error ", ex);
-            n.setLastSavedOn(previous);//restore last timestamp
+            n.setLastSavedOn(lastSavedTS_bak);//restore last timestamp
+            n.setRemoteTimestamp(lastRemoteTS_bak);
             return false;
         } catch (IOException ex) {
             log.error("remote write error ", ex);
-            n.setLastSavedOn(previous);//restore last timestamp
+            n.setLastSavedOn(lastSavedTS_bak);//restore last timestamp
+            n.setRemoteTimestamp(lastRemoteTS_bak);
             return false;
         } finally {
             try {
