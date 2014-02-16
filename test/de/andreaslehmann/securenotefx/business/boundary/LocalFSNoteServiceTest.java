@@ -230,7 +230,7 @@ public class LocalFSNoteServiceTest {
 
             NoteEntity e = service.readNoteEntity(UUID.fromString(MODIFY_TESTFILE_UUID));
             long beforeChange = e.getLastSavedOn();
-            e.setTitle("modified Title");
+            e.setTitle("modified Title"+System.currentTimeMillis());
             Thread.sleep(1000);
             service.writeNoteEntity(e);
             long afterChange = e.getLastSavedOn();
