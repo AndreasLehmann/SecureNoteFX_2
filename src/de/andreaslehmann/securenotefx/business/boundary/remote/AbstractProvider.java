@@ -245,11 +245,12 @@ public abstract class AbstractProvider {
                     } else {
                         if (change.newNote.isDeleted()) {
                             remoteWrite(change.oldNote);
+
                         } else {
                             NoteEntity merged = merge(change);
                             idx = activeNoteList.indexOf(change.oldNote);
                             activeNoteList.set(idx, merged);
-                            remoteWrite(merged);
+                            // remoteWrite(merged); // Nicht gleich speichern!
                         }
 
                     }
