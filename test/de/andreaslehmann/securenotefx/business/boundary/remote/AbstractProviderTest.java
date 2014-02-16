@@ -1301,7 +1301,7 @@ public class AbstractProviderTest {
         assertEquals(3, localList.size());
         assertNotSame(e1_2_local, localList.get(1));
         assertNotSame(e1_2_remote, localList.get(1));
-        assertSame(localList.get(1), tmp); //  Schreibversuch
+        // assertSame(localList.get(1), tmp); //  das schreiben der Änderungen nach einem Konflikt wurde deaktiviert.
         assertTrue(localList.get(1).getTitle().contains("Konflikt"));
     }
 
