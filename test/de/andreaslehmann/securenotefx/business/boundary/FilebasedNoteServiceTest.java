@@ -135,7 +135,7 @@ public class FilebasedNoteServiceTest {
 
         // ##########################################
         /// Test 1 alles ist unverändert
-        service.synchronize(); // neu einlesen!
+        //service.synchronize(); // neu einlesen!
         l1 = service.list().getValue();
         assertEquals(l1.toString(), baseList.toString()); // sind die Listen nach dem erneuten Einlesen noch gleich?
 
